@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AURA</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="welcome-view" id="welcomeView" aria-label="Welcome to AURA">
+        <div class="welcome-content">
+          <div class="welcome-copy">
+            <p class="welcome-kicker">NextStep AI</p>
+            <h1>AURA</h1>
+            <p class="welcome-statement">
+              Memories are the core foundation of human survival, identity, and social connection, and we save that memory.
+            </p>
+            <button class="welcome-start-button" id="welcomeStartButton" type="button">
+              <span>Get Started</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="auth-panel" id="authView" aria-label="AURA sign in" hidden>
+        <div class="auth-card">
+          <button class="auth-welcome-button" id="authWelcomeButton" type="button">
+            <span aria-hidden="true">&larr;</span>
+            Welcome
+          </button>
+          <div>
+            <p class="eyebrow">AURA</p>
+            <h1>Sign In</h1>
+          </div>
+
+          <div class="auth-tabs" role="tablist" aria-label="Sign in options">
+            <button class="auth-tab is-active" id="showLoginButton" type="button">Log In</button>
+            <button class="auth-tab" id="showSignupButton" type="button">First Time</button>
+            <button class="auth-tab" id="showAdminButton" type="button">Admin</button>
+          </div>
+
+          <div class="auth-preferences" id="authPreferences">
+            <fieldset class="auth-role-picker">
+              <legend>Interface</legend>
+              <div class="auth-role-options">
+                <label class="auth-role-option">
+                  <input type="radio" name="authRole" value="patient" checked>
+                  <span>Patient</span>
+                </label>
+                <label class="auth-role-option">
+                  <input type="radio" name="authRole" value="caregiver">
+                  <span>Caregiver</span>
+                </label>
+              </div>
+            </fieldset>
+            <label class="auth-language" for="languageSelect">
+              <span>Language</span>
+              <select id="languageSelect">
+                <option value="auto">Auto detect</option>
+              </select>
+            </label>
+          </div>
+
+          <form class="auth-form" id="loginForm">
+            <label for="loginUsername">Username</label>
+            <input id="loginUsername" autocomplete="username" required>
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" autocomplete="current-password" required>
+            <label for="loginCaregiverPassword">Caregiver password</label>
+            <input id="loginCaregiverPassword" type="password" autocomplete="current-password" required>
+            <label for="loginCaregiverPhone">Caregiver phone (optional)</label>
+            <input
+              id="loginCaregiverPhone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="+1 555 123 4567"
+            >
+            <button class="primary-button" type="submit">Log In</button>
+          </form>
+
+          <form class="auth-form" id="signupForm" hidden>
+            <label for="signupPatientName">Patient name</label>
+            <input id="signupPatientName" autocomplete="name" required>
+            <label for="signupCaregiverName">Caregiver name</label>
+            <input id="signupCaregiverName" autocomplete="name" required>
+            <label for="signupUsername">Username</label>
+            <input id="signupUsername" autocomplete="username" required>
+            <label for="signupPassword">Password</label>
+            <input id="signupPassword" type="password" autocomplete="new-password" required>
+            <label for="signupCaregiverPassword">Caregiver password</label>
+            <input id="signupCaregiverPassword" type="password" autocomplete="new-password" required>
+            <label for="signupCaregiverPhone">Caregiver phone (optional)</label>
+            <input
+              id="signupCaregiverPhone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="+1 555 123 4567"
+            >
+            <button class="primary-button" type="submit">Create Account</button>
+          </form>
+
+          <form class="auth-form" id="adminLoginForm" hidden>
+            <label for="adminUsername">Admin username</label>
+            <input id="adminUsername" autocomplete="username" required>
+            <label for="adminPassword">Admin password</label>
+            <input id="adminPassword" type="password" autocomplete="current-password" required>
+            <button class="primary-button" type="submit">Open Admin</button>
+          </form>
+
+          <p class="auth-status" id="authStatus"></p>
+        </div>
+      </section>
+
+      <div class="app-content" id="appContent" hidden>
+        <div class="top-bar">
+          <strong class="active-role-label" id="activeRoleLabel">Patient</strong>
+          <div class="account-bar">
+            <span id="accountLabel">Signed in</span>
+            <button class="ghost-button" id="openAdminButton" type="button">Admin</button>
+            <button class="ghost-button" id="logoutButton" type="button">Log Out</button>
+          </div>
+        </div>
+
+      <section
+        class="patient-panel role-panel is-active"
+        id="patientView"
+        aria-label="Patient interface"
+      >
+        <header class="app-header">
+          <div>
+            <p class="eyebrow">NextStep AI</p>
+            <h1>AURA</h1>
+            <p class="interface-greeting" id="patientGreeting">Hi</p>
+          </div>
+          <div class="header-actions">
+            <button
+              class="icon-button"
+              id="speechToggle"
+              type="button"
+              aria-label="Turn spoken replies off"
+              title="Spoken replies"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+                <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+                <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+              </svg>
+            </button>
+            <button
+              class="icon-button"
+              id="micButton"
+              type="button"
+              aria-label="Start voice input"
+              title="Voice input"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <path d="M12 19v3"></path>
+              </svg>
+            </button>
+            <button class="ghost-button" id="clearButton" type="button">Clear</button>
+          </div>
+        </header>
+
+        <div class="status-row">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">Ready</span>
+          <span class="current-task" id="currentTaskText">No task started</span>
+        </div>
+
+        <section class="patient-focus" aria-label="Current task">
+          <div class="patient-task-card">
+            <p class="eyebrow">Now</p>
+            <h2 id="patientTaskName">No task open</h2>
+            <p class="patient-instruction" id="patientInstructionText">
+              I am here with you.
+            </p>
+            <p class="patient-task-meta" id="patientTaskMeta">
+              Use the buttons below.
+            </p>
+          </div>
+
+          <div class="patient-actions" aria-label="Patient actions">
+            <button class="patient-action primary-action" type="button" data-message="Done">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m5 12 4 4L19 6"></path>
+              </svg>
+              <span>Done</span>
+            </button>
+            <button class="patient-action" type="button" data-message="Help">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M9.5 9a2.7 2.7 0 0 1 5.1 1.2c0 1.8-2.6 2-2.6 3.8"></path>
+                <path d="M12 18h.01"></path>
+              </svg>
+              <span>Help</span>
+            </button>
+            <button class="patient-action issue-action" id="reportIssueButton" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M10.3 3.4 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.4a2 2 0 0 0-3.4 0Z"></path>
+                <path d="M12 9v4"></path>
+                <path d="M12 17h.01"></path>
+              </svg>
+              <span>Report Issue</span>
+            </button>
+            <button class="patient-action communication-action" id="patientChatToggle" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path>
+                <path d="M8 9h8"></path>
+                <path d="M8 13h5"></path>
+              </svg>
+              <span>AURA Chat</span>
+            </button>
+            <button class="patient-action communication-action" id="patientCaregiverChatToggle" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M20 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4Z"></path>
+                <circle cx="11.5" cy="9" r="2"></circle>
+                <path d="M8 15c.8-1.5 2-2.2 3.5-2.2S14.2 13.5 15 15"></path>
+              </svg>
+              <span>Caregiver Chat</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="patient-chat-area" id="patientChatArea" aria-label="Patient chat" hidden>
+          <div class="patient-chat-header">
+            <button class="ghost-button patient-chat-back" id="patientChatBackButton" type="button">
+              Back
+            </button>
+            <h3>AURA Chat</h3>
+          </div>
+          <div class="messages" id="messages" aria-live="polite">
+            <article class="message assistant">
+              <div class="avatar" aria-hidden="true">A</div>
+              <p>Hi. I am here with you.</p>
+            </article>
+          </div>
+
+          <form class="composer" id="chatForm">
+            <label class="sr-only" for="messageInput">Message</label>
+            <textarea
+              id="messageInput"
+              rows="1"
+              placeholder="Type a message"
+              autocomplete="off"
+            ></textarea>
+            <button id="sendButton" type="submit">Send</button>
+          </form>
+        </section>
+
+        <section
+          class="patient-caregiver-chat-area direct-chat-area"
+          id="patientCaregiverChatArea"
+          aria-label="Caregiver chat"
+          hidden
+        >
+          <div class="patient-chat-header">
+            <button class="ghost-button patient-chat-back" id="patientCaregiverChatBackButton" type="button">
+              Back
+            </button>
+            <h3>Caregiver Chat</h3>
+          </div>
+          <div class="direct-chat-messages" id="patientCaregiverMessages" aria-live="polite">
+            <p class="empty-state">No messages yet.</p>
+          </div>
+
+          <form class="composer" id="patientCaregiverChatForm">
+            <label class="sr-only" for="patientCaregiverMessageInput">Message caregiver</label>
+            <textarea
+              id="patientCaregiverMessageInput"
+              rows="1"
+              placeholder="Message caregiver"
+              autocomplete="off"
+            ></textarea>
+            <button id="patientCaregiverSendButton" type="submit">Send</button>
+          </form>
+        </section>
+      </section>
+
+      <section
+        class="caregiver-panel role-panel"
+        id="caregiverView"
+        aria-label="Caregiver interface"
+        hidden
+      >
+        <header class="caregiver-header">
+          <div>
+            <p class="eyebrow">Caregiver</p>
+            <h2>Caregiver Dashboard</h2>
+            <p class="interface-greeting" id="caregiverGreeting">Hi</p>
+          </div>
+          <div class="header-actions">
+            <button class="ghost-button clear-caregiver-button" id="resetCaregiverButton" type="button">
+              Clear Alerts &amp; Chat
+            </button>
+            <button class="ghost-button" id="refreshCaregiverButton" type="button">
+              Refresh
+            </button>
+          </div>
+        </header>
+
+        <div class="caregiver-section-toolbar" id="caregiverSectionToolbar" hidden>
+          <button class="caregiver-home-button" id="caregiverHomeButton" type="button">
+            <span aria-hidden="true">&larr;</span>
+            Home
+          </button>
+          <strong id="caregiverSectionLabel">Caregiver Home</strong>
+        </div>
+
+        <section
+          class="caregiver-home caregiver-section-panel is-active"
+          id="caregiverSection-home"
+          aria-label="Caregiver home"
+        >
+          <div class="caregiver-home-overview">
+            <div class="caregiver-home-summary">
+              <p class="eyebrow">Today</p>
+              <h3>Care Overview</h3>
+              <p id="caregiverHomeSummary">No patient activity has been recorded yet.</p>
+            </div>
+            <div class="caregiver-home-kpis" aria-label="Today's key activity">
+              <div class="home-kpi">
+                <strong id="homeCompletedStat">0</strong>
+                <span>Marked complete</span>
+              </div>
+              <div class="home-kpi home-kpi-alert">
+                <strong id="homeAlertStat">0</strong>
+                <span>Safety alerts</span>
+              </div>
+              <div class="home-kpi">
+                <strong id="homeHelpStat">0</strong>
+                <span>Help requests</span>
+              </div>
+            </div>
+          </div>
+
+          <nav class="caregiver-home-grid" aria-label="Caregiver tools">
+            <button class="caregiver-home-card card-patient-chat" type="button" data-caregiver-section="patientChat">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Patient Chat</strong>
+                <span id="homePatientChatStatus">No messages</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-alerts" type="button" data-caregiver-section="alerts">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M10.3 3.4 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.4a2 2 0 0 0-3.4 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Safety Alerts</strong>
+                <span id="homeAlertStatus">No alerts</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-schedule" type="button" data-caregiver-section="schedule">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Schedule</strong>
+                <span id="homeScheduleStatus">0 routines</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-performance" type="button" data-caregiver-section="performance">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 19V9"></path><path d="M10 19V5"></path><path d="M16 19v-7"></path><path d="M22 19H2"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Performance</strong>
+                <span id="homePerformanceStatus">No data</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-update" type="button" data-caregiver-section="update">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M9 3h6v4H9z"></path><path d="m9 14 2 2 4-4"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>AURA Update</strong>
+                <span id="homeUpdateStatus">Ready</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-activity" type="button" data-caregiver-section="activity">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 12h4l2-7 4 14 2-7h6"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Recent Activity</strong>
+                <span id="homeActivityStatus">Nothing today</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-dataset" type="button" data-caregiver-section="dataset">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Dataset</strong>
+                <span id="homeDatasetStatus">0 records</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-clock" type="button" data-caregiver-section="clock">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Test Clock</strong>
+                <span id="homeClockStatus">1x speed</span>
+              </span>
+            </button>
+            <button class="caregiver-home-card card-reminders" type="button" data-caregiver-section="reminders">
+              <span class="home-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+              </span>
+              <span class="home-card-copy">
+                <strong>Reminders</strong>
+                <span id="homeReminderStatus">Off</span>
+              </span>
+            </button>
+          </nav>
+        </section>
+
+        <section
+          class="caregiver-chat caregiver-section-panel"
+          id="caregiverSection-chat"
+          aria-label="Caregiver chat"
+          hidden
+        >
+          <h3>Chat With AURA</h3>
+          <div class="caregiver-chat-messages" id="caregiverChatMessages" aria-live="polite">
+            <article class="caregiver-chat-message assistant">
+              I can help review the current session.
+            </article>
+          </div>
+          <form class="caregiver-composer" id="caregiverChatForm">
+            <label class="sr-only" for="caregiverMessageInput">Caregiver message</label>
+            <textarea
+              id="caregiverMessageInput"
+              rows="1"
+              placeholder="Ask about the patient's session"
+              autocomplete="off"
+            ></textarea>
+            <button id="caregiverSendButton" type="submit">Send</button>
+          </form>
+        </section>
+
+        <section
+          class="caregiver-patient-chat caregiver-section-panel"
+          id="caregiverSection-patient-chat"
+          aria-label="Chat with patient"
+          hidden
+        >
+          <h3>Chat With Patient</h3>
+          <div class="direct-chat-messages" id="caregiverPatientMessages" aria-live="polite">
+            <p class="empty-state">No messages yet.</p>
+          </div>
+          <form class="caregiver-composer" id="caregiverPatientChatForm">
+            <label class="sr-only" for="caregiverPatientMessageInput">Message patient</label>
+            <textarea
+              id="caregiverPatientMessageInput"
+              rows="1"
+              placeholder="Message the patient"
+              autocomplete="off"
+            ></textarea>
+            <button id="caregiverPatientSendButton" type="submit">Send</button>
+          </form>
+        </section>
+
+        <section
+          class="alert-panel caregiver-section-panel"
+          id="caregiverSection-alerts"
+          aria-label="Caregiver alerts"
+          hidden
+        >
+          <div class="section-title-row">
+            <h3>Safety Alerts</h3>
+            <span id="alertStatus">Ready</span>
+          </div>
+          <div id="alertList" class="alert-list">
+            <p class="empty-state">No safety alerts in this session.</p>
+          </div>
+        </section>
+
+        <div class="caregiver-section-panel" id="caregiverSection-schedule" hidden>
+          <section class="routine-manager" aria-label="Routine management">
+            <div class="section-title-row">
+              <h3>Routine Management</h3>
+              <span id="routineCount">0 routines</span>
+            </div>
+            <form class="routine-form" id="routineForm">
+              <input id="routineName" placeholder="Task name" required>
+              <input id="routineCategory" placeholder="Category" required>
+              <input id="routineTime" type="time" value="09:00" required>
+              <select id="routineTimeOfDay">
+                <option>Morning</option>
+                <option>Afternoon</option>
+                <option>Evening</option>
+              </select>
+              <input id="routineDifficulty" type="number" min="1" max="5" value="3" title="Difficulty 1-5">
+              <input id="routineImportance" type="number" min="1" max="5" value="3" title="Importance 1-5">
+              <textarea id="routineInstructions" rows="3" placeholder="One step per line" required></textarea>
+              <button class="primary-button" type="submit">Save Routine</button>
+            </form>
+            <div class="routine-list" id="routineList"></div>
+          </section>
+        </div>
+
+        <div class="caregiver-section-panel" id="caregiverSection-performance" hidden>
+          <section class="stats-grid" aria-label="Session stats">
+            <div class="stat-card">
+              <span id="interactionsStat">0</span>
+              <p>Interactions</p>
+            </div>
+            <div class="stat-card">
+              <span id="completedStat">0</span>
+              <p>Marked complete</p>
+            </div>
+            <div class="stat-card">
+              <span id="helpStat">0</span>
+              <p>Help requests</p>
+            </div>
+            <div class="stat-card">
+              <span id="reminderStat">0</span>
+              <p>Reminders</p>
+            </div>
+            <div class="stat-card">
+              <span id="visualStat">0</span>
+              <p>Missed tasks</p>
+            </div>
+            <div class="stat-card">
+              <span id="confusionStat">0</span>
+              <p>Confusion flags</p>
+            </div>
+          </section>
+
+          <section class="insight-panel caregiver-detailed-insights" aria-label="Performance insights">
+            <div class="section-title-row">
+              <div>
+                <h3>Performance Insights</h3>
+                <p class="section-subtext" id="caregiverInsightSource">
+                  Waiting for stored patient records.
+                </p>
+              </div>
+            </div>
+            <div class="dataset-grid caregiver-insight-summary" id="insightGrid"></div>
+
+            <div class="caregiver-insight-columns">
+              <section class="caregiver-insight-section">
+                <h4>Time of Day</h4>
+                <div class="admin-insight-list" id="caregiverTimeInsightList"></div>
+              </section>
+              <section class="caregiver-insight-section">
+                <h4>Task Difficulty</h4>
+                <div class="admin-insight-list" id="caregiverDifficultyInsightList"></div>
+              </section>
+              <section class="caregiver-insight-section">
+                <h4>Day of Week</h4>
+                <div class="admin-insight-list" id="caregiverDayInsightList"></div>
+              </section>
+              <section class="caregiver-insight-section">
+                <h4>Tasks Needing Review</h4>
+                <div class="admin-insight-list" id="caregiverTaskInsightList"></div>
+              </section>
+              <section class="caregiver-insight-section caregiver-trend-section">
+                <h4>Recent Trend</h4>
+                <div class="admin-insight-list" id="caregiverTrendInsightList"></div>
+              </section>
+            </div>
+
+            <div class="caregiver-insight-notes">
+              <section class="caregiver-insight-section">
+                <h4>Key Findings</h4>
+                <ul class="admin-insight-bullets" id="caregiverKeyFindings"></ul>
+              </section>
+              <section class="caregiver-insight-section">
+                <h4>Recommended Actions</h4>
+                <ul class="admin-insight-bullets" id="caregiverRecommendedActions"></ul>
+              </section>
+              <section class="caregiver-insight-section">
+                <h4>How to Read This</h4>
+                <ul class="admin-insight-bullets" id="caregiverDataNotes"></ul>
+              </section>
+            </div>
+          </section>
+        </div>
+
+        <div class="caregiver-section-panel" id="caregiverSection-update" hidden>
+          <section class="caregiver-update">
+            <div class="section-title-row">
+              <h3>AURA Update</h3>
+              <span id="caregiverStatus">Ready</span>
+            </div>
+            <p id="caregiverUpdateText">No patient activity has been recorded yet.</p>
+          </section>
+        </div>
+
+        <div class="caregiver-section-panel" id="caregiverSection-activity" hidden>
+          <section class="recent-events">
+            <h3>Recent Activity</h3>
+            <div id="recentEventsList" class="event-list">
+              <p class="empty-state">No recent activity.</p>
+            </div>
+          </section>
+        </div>
+
+      <div
+        class="caregiver-section-panel"
+        id="caregiverSection-dataset"
+        aria-label="Patient dataset"
+        hidden
+      >
+          <section class="dataset-panel" aria-label="Patient dataset">
+            <div class="section-title-row">
+              <div>
+                <h3>Patient Dataset</h3>
+                <p class="section-subtext" id="datasetPathText">Stored in SQLite.</p>
+              </div>
+              <div class="dataset-actions">
+                <a class="export-link" href="/api/export" id="exportLink" download>
+                  Export CSV
+                </a>
+                <button class="danger-button" id="clearDatasetButton" type="button">
+                  Clear Dataset
+                </button>
+              </div>
+            </div>
+            <div class="dataset-grid" id="datasetSummaryGrid"></div>
+            <div class="dataset-table-wrap">
+              <table class="dataset-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Reminders</th>
+                    <th>Help</th>
+                    <th>Possible Confusion</th>
+                    <th>Raw</th>
+                    <th>Adjusted</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="datasetTableBody">
+                  <tr>
+                    <td colspan="10">Unlock dataset view.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+      </div>
+
+      <div
+        class="caregiver-section-panel"
+        id="caregiverSection-clock"
+        aria-label="Test clock"
+        hidden
+      >
+        <header class="app-header">
+          <div>
+            <p class="eyebrow">Testing</p>
+            <h1>Test Clock</h1>
+            <p class="interface-greeting">Task timing uses real-life wait time.</p>
+          </div>
+        </header>
+
+        <section class="test-clock" aria-label="Testing clock controls">
+          <div class="clock-readout">
+            <p class="eyebrow">Current Test Time</p>
+            <strong id="clockDisplay">Loading time</strong>
+          </div>
+          <div class="clock-controls">
+            <label class="clock-field" for="clockSpeed">
+              <span>Speed</span>
+              <select id="clockSpeed">
+                <option value="">Custom</option>
+                <option value="0">Paused</option>
+                <option value="1" selected>1x</option>
+                <option value="5">5x</option>
+                <option value="15">15x</option>
+                <option value="60">60x</option>
+                <option value="120">120x</option>
+              </select>
+            </label>
+            <label class="clock-field clock-field-custom" for="customClockSpeed">
+              <span>Custom</span>
+              <input
+                id="customClockSpeed"
+                type="number"
+                min="0"
+                max="240"
+                step="0.25"
+                placeholder="1x"
+              >
+            </label>
+            <button class="primary-button clock-action" id="applyCustomSpeedButton" type="button">Set</button>
+            <button class="ghost-button clock-action" id="resetClockButton" type="button">Reset</button>
+          </div>
+        </section>
+
+        <section class="clock-schedule-panel" aria-label="Today's task timing">
+          <div class="section-title-row">
+            <div>
+              <h3>Today's Task Timing</h3>
+              <p class="section-subtext">Real-life time until each scheduled task at the current speed.</p>
+            </div>
+            <span id="clockTaskStatus">Ready</span>
+          </div>
+          <div class="clock-task-list" id="clockTaskList"></div>
+        </section>
+      </div>
+
+      <div
+        class="caregiver-section-panel"
+        id="caregiverSection-reminders"
+        aria-label="Reminder settings"
+        hidden
+      >
+        <section class="reminder-settings">
+          <div class="notification-setting-block">
+            <div class="section-title-row">
+              <div>
+                <p class="eyebrow">Patient Notifications</p>
+                <h3>Task Reminders</h3>
+              </div>
+              <button
+                class="reminder-toggle"
+                id="caregiverReminderToggle"
+                type="button"
+                role="switch"
+                aria-checked="false"
+              >
+                Off
+              </button>
+            </div>
+            <p class="reminder-setting-status" id="caregiverReminderStatus">
+              Reminders are off for this browser.
+            </p>
+          </div>
+          <div class="notification-setting-block caregiver-alert-setting">
+            <div class="section-title-row">
+              <div>
+                <p class="eyebrow">Caregiver Notifications</p>
+                <h3>Safety and Missed Tasks</h3>
+              </div>
+              <button
+                class="reminder-toggle"
+                id="caregiverAlertNotificationToggle"
+                type="button"
+                role="switch"
+                aria-checked="false"
+              >
+                Off
+              </button>
+            </div>
+            <p class="reminder-setting-status" id="caregiverAlertNotificationStatus">
+              In-app alerts are active. Browser notifications are off.
+            </p>
+          </div>
+          <div class="notification-setting-block text-alert-setting">
+            <div class="section-title-row">
+              <div>
+                <p class="eyebrow">Caregiver Phone</p>
+                <h3>Text Messages</h3>
+              </div>
+              <button
+                class="reminder-toggle sms-toggle"
+                id="caregiverSmsToggle"
+                type="button"
+                role="switch"
+                aria-checked="false"
+              >
+                Disabled
+              </button>
+            </div>
+            <p class="reminder-setting-status" id="caregiverSmsStatus">
+              Add an optional caregiver phone number at login to receive emergency and missed-task texts.
+            </p>
+          </div>
+        </section>
+      </div>
+        <aside
+          class="caregiver-live-alert"
+          id="caregiverLiveAlert"
+          role="alert"
+          aria-live="assertive"
+          hidden
+        >
+          <div class="caregiver-live-alert-copy">
+            <strong id="caregiverLiveAlertTitle">New caregiver alert</strong>
+            <p id="caregiverLiveAlertMessage"></p>
+          </div>
+          <div class="caregiver-live-alert-actions">
+            <button class="live-alert-view" id="caregiverLiveAlertView" type="button">
+              View Alerts
+            </button>
+            <button
+              class="live-alert-dismiss"
+              id="caregiverLiveAlertDismiss"
+              type="button"
+              aria-label="Dismiss notification"
+              title="Dismiss"
+            >
+              &times;
+            </button>
+          </div>
+        </aside>
+        <button
+          class="caregiver-aura-launcher"
+          id="caregiverAuraChatLauncher"
+          type="button"
+          aria-label="Open chat with AURA"
+          title="Chat with AURA"
+        >
+          <span class="caregiver-chat-glyph" aria-hidden="true"></span>
+        </button>
+      </section>
+
+      <div class="password-backdrop" id="datasetWarningModal" hidden>
+        <form class="password-dialog warning-dialog" id="datasetWarningForm">
+          <h2>Clear Patient Dataset</h2>
+          <p>
+            This permanently deletes this patient's task history, alerts, caregiver notes,
+            summaries, and caregiver chat. Scheduled routines stay in place.
+          </p>
+          <div class="password-actions">
+            <button class="ghost-button" id="cancelDatasetWarningButton" type="button">
+              Cancel
+            </button>
+            <button class="danger-button" type="submit">Continue</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="password-backdrop" id="passwordModal" hidden>
+        <form class="password-dialog" id="passwordForm">
+          <h2 id="passwordTitle">Caregiver Access</h2>
+          <label for="passwordInput">Password</label>
+          <input
+            id="passwordInput"
+            type="password"
+            inputmode="numeric"
+            autocomplete="current-password"
+            placeholder="Enter password"
+          >
+          <p class="password-error" id="passwordError" hidden></p>
+          <div class="password-actions">
+            <button class="ghost-button" id="cancelPasswordButton" type="button">
+              Cancel
+            </button>
+            <button class="primary-button" id="passwordSubmitButton" type="submit">Unlock</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="password-backdrop" id="adminLoginModal" hidden>
+        <form class="password-dialog" id="adminModalForm">
+          <h2>Admin Access</h2>
+          <label for="adminModalUsername">Username</label>
+          <input id="adminModalUsername" autocomplete="username" required>
+          <label for="adminModalPassword">Password</label>
+          <input
+            id="adminModalPassword"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+          <p class="password-error" id="adminModalError" hidden></p>
+          <div class="password-actions">
+            <button class="ghost-button" id="cancelAdminModalButton" type="button">
+              Cancel
+            </button>
+            <button class="primary-button" type="submit">Open Admin</button>
+          </div>
+        </form>
+      </div>
+      </div>
+
+      <section class="admin-panel" id="adminView" aria-label="Admin datasets" hidden>
+        <header class="admin-header">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h1>All Patient Datasets</h1>
+            <p class="section-subtext" id="adminDatabasePath">Stored in SQLite.</p>
+          </div>
+          <div class="header-actions">
+            <button class="ghost-button" id="adminBackButton" type="button">Back</button>
+            <button class="ghost-button" id="adminLogoutButton" type="button">Log Out Admin</button>
+          </div>
+        </header>
+
+        <nav class="admin-subtabs" aria-label="Admin sections">
+          <button class="admin-subtab is-active" type="button" data-admin-section="datasets">
+            Patient Datasets
+          </button>
+          <button class="admin-subtab" type="button" data-admin-section="dummy">
+            Dummy Dataset Insights
+          </button>
+        </nav>
+
+        <div class="admin-section-panel admin-layout is-active" id="adminSection-datasets">
+          <aside class="admin-sidebar" aria-label="Accounts">
+            <div class="section-title-row">
+              <h3>Accounts</h3>
+              <span id="adminAccountCount">0</span>
+            </div>
+            <div class="admin-account-list" id="adminAccountList"></div>
+          </aside>
+
+          <section class="admin-dataset-card" aria-label="Selected account dataset">
+            <div class="section-title-row">
+              <div>
+                <h2 id="adminDatasetTitle">Dataset</h2>
+                <p class="section-subtext" id="adminDatasetSubtitle">Choose an account.</p>
+              </div>
+              <a class="export-link" id="adminExportLink" href="/api/admin-export">Export CSV</a>
+            </div>
+
+            <div class="dataset-grid" id="adminSummaryGrid"></div>
+            <div class="dataset-table-wrap admin-table-wrap">
+              <table class="dataset-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Reminders</th>
+                    <th>Help</th>
+                    <th>Possible Confusion</th>
+                    <th>Raw</th>
+                    <th>Adjusted</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="adminDatasetTableBody">
+                  <tr>
+                    <td colspan="10">Log in as admin to view datasets.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <section
+          class="admin-section-panel admin-dummy-interface"
+          id="adminSection-dummy"
+          aria-label="Dummy dataset insights"
+          hidden
+        >
+          <div class="admin-dummy-hero">
+            <div>
+              <p class="eyebrow">Reference Dataset</p>
+              <h2>Dummy Dataset Insights</h2>
+              <p class="section-subtext" id="adminDummyInsightSource">
+                Based on Main dataset.xlsx.
+              </p>
+            </div>
+          </div>
+
+          <div class="dataset-grid admin-dummy-summary" id="adminDummySummaryGrid"></div>
+
+          <div class="admin-dummy-grid">
+            <section class="admin-insight-section">
+              <h3>Time of Day</h3>
+              <div class="admin-insight-list" id="adminDummyTimeList"></div>
+            </section>
+            <section class="admin-insight-section">
+              <h3>Task Difficulty</h3>
+              <div class="admin-insight-list" id="adminDummyDifficultyList"></div>
+            </section>
+          </div>
+
+          <div class="admin-dummy-notes">
+            <section class="admin-insight-section">
+              <h3>Key Findings</h3>
+              <ul class="admin-insight-bullets" id="adminDummyFindings"></ul>
+            </section>
+            <section class="admin-insight-section">
+              <h3>Recommended Actions</h3>
+              <ul class="admin-insight-bullets" id="adminDummyActions"></ul>
+            </section>
+            <section class="admin-insight-section">
+              <h3>Modeling Notes</h3>
+              <ul class="admin-insight-bullets" id="adminDummyModelingNotes"></ul>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

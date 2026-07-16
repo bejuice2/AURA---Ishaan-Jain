@@ -1,0 +1,5301 @@
+:root {
+  color-scheme: light;
+  --bg: #f3f6f8;
+  --panel: #ffffff;
+  --panel-soft: #f8fafb;
+  --ink: #15211f;
+  --muted: #64726f;
+  --line: #dce4e7;
+  --line-strong: #c6d3d8;
+  --brand: #277d84;
+  --brand-dark: #14565d;
+  --brand-soft: #e5f4f5;
+  --accent: #b95d37;
+  --accent-soft: #fff0e9;
+  --danger: #a43b35;
+  --danger-soft: #fff1ef;
+  --assistant: #eaf5f3;
+  --user: #1d3f46;
+  --shadow: 0 18px 45px rgba(31, 49, 54, 0.13);
+  --shadow-soft: 0 8px 24px rgba(31, 49, 54, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    linear-gradient(180deg, #eef6f7 0%, rgba(238, 246, 247, 0) 42%),
+    linear-gradient(90deg, rgba(185, 93, 55, 0.08), rgba(39, 125, 132, 0.06)),
+    var(--bg);
+  color: var(--ink);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app-shell {
+  width: min(1180px, 100%);
+  height: 100vh;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.app-content {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 14px;
+  height: 100%;
+  min-height: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.role-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1 1 340px;
+  min-width: min(360px, 100%);
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 35px rgba(29, 37, 35, 0.08);
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.language-tool {
+  display: grid;
+  flex: 0 0 190px;
+  gap: 4px;
+}
+
+.language-tool span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.language-tool select {
+  min-height: 42px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 10px;
+  color: var(--ink);
+  background: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  outline: none;
+}
+
+.language-tool select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
+}
+
+.account-bar {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+  min-width: 0;
+}
+
+.account-bar span {
+  max-width: 230px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-panel {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+}
+
+.auth-card {
+  display: grid;
+  gap: 16px;
+  width: min(430px, 100%);
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf8;
+}
+
+.auth-tab {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+
+.auth-tab.is-active {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.auth-form {
+  display: grid;
+  gap: 9px;
+}
+
+.auth-form label {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.auth-form input {
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 13px;
+  color: var(--ink);
+  background: #ffffff;
+  font: inherit;
+  outline: none;
+}
+
+.auth-form input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
+}
+
+.auth-status {
+  min-height: 20px;
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.auth-wide-button {
+  width: 100%;
+}
+
+.caregiver-subtabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  flex-shrink: 0;
+  gap: 8px;
+  margin: 0 22px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf8;
+}
+
+.caregiver-subtab {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+
+.caregiver-subtab.is-active {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.caregiver-section-panel {
+  flex-shrink: 0;
+}
+
+.caregiver-section-panel.is-active {
+  display: grid;
+  gap: 16px;
+}
+
+.role-tab {
+  min-height: 46px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+
+.role-tab.is-active {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.test-clock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff, #f7faf8);
+  box-shadow: 0 10px 35px rgba(29, 37, 35, 0.08);
+}
+
+.clock-readout {
+  min-width: 230px;
+}
+
+.test-clock strong {
+  display: block;
+  color: var(--brand-dark);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.clock-controls {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.clock-field {
+  display: grid;
+  gap: 4px;
+}
+
+.clock-field span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.test-clock select,
+.test-clock input {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 10px;
+  color: var(--ink);
+  background: #ffffff;
+  font: inherit;
+}
+
+.test-clock input {
+  width: 96px;
+}
+
+.test-clock select {
+  width: 116px;
+}
+
+.clock-action {
+  min-height: 40px;
+  padding: 0 13px;
+}
+
+.clock-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.clock-panel .test-clock {
+  margin: 0 18px;
+}
+
+.clock-schedule-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+  margin: 0 18px 18px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.clock-task-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.clock-task-item {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr) minmax(92px, auto);
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.clock-task-item.is-past {
+  opacity: 0.62;
+}
+
+.clock-task-time {
+  color: var(--brand-dark);
+  font-size: 1rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock-task-main {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.clock-task-main strong,
+.clock-task-main span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clock-task-main strong {
+  color: var(--ink);
+}
+
+.clock-task-main span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.clock-task-wait {
+  justify-self: end;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-size: 0.88rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.patient-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, auto) minmax(0, 1fr);
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.patient-panel.is-chat-open {
+  grid-template-rows: auto auto minmax(130px, 0.55fr) minmax(250px, 1fr);
+}
+
+.patient-panel.is-chat-open .patient-focus {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+  gap: 12px;
+  padding: 14px 18px;
+}
+
+.patient-panel.is-chat-open .patient-task-card {
+  min-height: 0;
+  padding: 16px;
+}
+
+.patient-panel.is-chat-open .patient-task-card h2 {
+  font-size: 1.35rem;
+}
+
+.patient-panel.is-chat-open .patient-instruction {
+  font-size: 1.18rem;
+  line-height: 1.2;
+}
+
+.patient-panel.is-chat-open .patient-actions {
+  gap: 8px;
+}
+
+.patient-panel.is-chat-open .patient-action {
+  min-height: 44px;
+  font-size: 0.95rem;
+}
+
+.patient-panel.is-chat-open .patient-action.primary-action {
+  min-height: 52px;
+  font-size: 1.05rem;
+}
+
+.patient-focus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 18px;
+  padding: 24px;
+  overflow: auto;
+}
+
+.patient-task-card {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  min-height: 260px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.patient-task-card h2 {
+  color: var(--brand-dark);
+  font-size: clamp(1.7rem, 4vw, 3rem);
+  line-height: 1.05;
+}
+
+.patient-instruction {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 4vw, 2.65rem);
+  font-weight: 800;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.patient-task-meta,
+.patient-reminder-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.patient-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.patient-action {
+  min-height: 72px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 18px;
+  background: #f7faf8;
+  color: var(--brand-dark);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.patient-action.primary-action {
+  min-height: 86px;
+  background: var(--brand);
+  color: #ffffff;
+  font-size: 1.35rem;
+}
+
+.patient-action.issue-action {
+  border-color: rgba(200, 111, 66, 0.45);
+  background: #fff4f2;
+  color: #9f302b;
+}
+
+.patient-action.is-active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+.patient-chat-area {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.caregiver-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+  padding-bottom: 22px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow {
+  margin: 0 0 3px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1;
+}
+
+h2,
+h3 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: 0.98rem;
+}
+
+.interface-greeting {
+  margin: 7px 0 0;
+  color: var(--brand-dark);
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.ghost-button,
+.primary-button,
+.icon-button,
+.composer button,
+.caregiver-composer button {
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
+.ghost-button {
+  padding: 0 16px;
+  background: #f4f7f4;
+  color: var(--brand-dark);
+  border-color: var(--line);
+}
+
+.primary-button {
+  padding: 0 16px;
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.icon-button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  background: #f4f7f4;
+  color: var(--brand-dark);
+  border-color: var(--line);
+}
+
+.icon-button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.icon-button.is-active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+.icon-button.is-muted {
+  color: var(--muted);
+}
+
+.icon-button.is-muted svg path:nth-child(n + 2) {
+  display: none;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.current-task {
+  margin-left: auto;
+  color: var(--brand-dark);
+  font-weight: 700;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #62a96b;
+}
+
+.caregiver-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px 22px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex-shrink: 0;
+  gap: 10px;
+  margin: 0 22px;
+  padding: 0;
+}
+
+.stat-card {
+  min-height: 92px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf8;
+}
+
+.stat-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--brand-dark);
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.caregiver-update,
+.recent-events,
+.caregiver-chat,
+.caregiver-patient-chat,
+.alert-panel,
+.routine-manager,
+.insight-panel,
+.dataset-panel {
+  min-width: 0;
+  flex-shrink: 0;
+  margin: 0 22px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.caregiver-update {
+  overflow: auto;
+}
+
+.caregiver-update p {
+  margin: 12px 0 0;
+  color: var(--ink);
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-title-row span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.section-subtext {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.recent-events {
+  min-height: 0;
+  overflow: auto;
+}
+
+.alert-panel {
+  border-color: rgba(200, 111, 66, 0.45);
+}
+
+.routine-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.routine-form textarea,
+.routine-form button {
+  grid-column: 1 / -1;
+}
+
+.routine-form input,
+.routine-form select,
+.password-dialog input {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #ffffff;
+  font: inherit;
+  outline: none;
+}
+
+.routine-form textarea {
+  min-height: 88px;
+  max-height: 160px;
+}
+
+.routine-list {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.routine-item {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf8;
+}
+
+.routine-item strong {
+  display: block;
+  color: var(--brand-dark);
+}
+
+.routine-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.routine-item p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.export-link {
+  color: var(--brand-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.export-link.is-disabled {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.danger-button,
+.danger-link-button {
+  border: 1px solid rgba(178, 59, 54, 0.45);
+  border-radius: 8px;
+  background: #fff4f2;
+  color: #9f302b;
+  font-weight: 800;
+}
+
+.danger-button {
+  min-height: 44px;
+  padding: 0 16px;
+}
+
+.danger-link-button {
+  min-height: 34px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+}
+
+.dataset-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.dataset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dataset-table-wrap {
+  max-height: 430px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.dataset-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  font-size: 0.84rem;
+}
+
+.dataset-table th,
+.dataset-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.dataset-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f7faf8;
+  color: var(--brand-dark);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.dataset-table td {
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.dataset-table td:last-child {
+  min-width: 220px;
+  color: var(--muted);
+}
+
+.alert-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.alert-item {
+  padding: 12px;
+  border: 1px solid rgba(200, 111, 66, 0.28);
+  border-radius: 8px;
+  background: rgba(200, 111, 66, 0.08);
+}
+
+.alert-item strong {
+  display: block;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.alert-item p {
+  margin: 5px 0 0;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.alert-item span {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.caregiver-chat {
+  display: grid;
+  grid-template-rows: auto minmax(150px, 1fr) auto;
+  gap: 12px;
+  min-height: 340px;
+  overflow: hidden;
+}
+
+.caregiver-chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+
+.caregiver-chat-message {
+  max-width: 92%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.caregiver-chat-message.assistant {
+  align-self: flex-start;
+  background: var(--assistant);
+  color: var(--ink);
+}
+
+.caregiver-chat-message.caregiver {
+  align-self: flex-end;
+  background: var(--user);
+  color: #ffffff;
+}
+
+.caregiver-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.event-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.event-item {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf8;
+}
+
+.event-item p {
+  display: -webkit-box;
+  margin: 5px 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.event-meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.event-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.event-flags span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(200, 111, 66, 0.12);
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.empty-state {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.message {
+  display: grid;
+  grid-template-columns: 38px minmax(0, auto);
+  gap: 10px;
+  max-width: min(680px, 92%);
+  align-items: end;
+}
+
+.message p {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 13px 15px;
+  border-radius: 8px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.message.assistant p {
+  background: var(--assistant);
+  color: var(--ink);
+}
+
+.message.user {
+  align-self: flex-end;
+  grid-template-columns: minmax(0, auto) 38px;
+}
+
+.message.user p {
+  grid-column: 1;
+  grid-row: 1;
+  background: var(--user);
+  color: #ffffff;
+}
+
+.message.user .avatar {
+  grid-column: 2;
+}
+
+.avatar {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.message.user .avatar {
+  background: var(--accent);
+}
+
+.tool-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+}
+
+.quick-actions button {
+  padding: 0 12px;
+  background: #f7faf8;
+  color: var(--brand-dark);
+  border-color: var(--line);
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 0 24px 18px;
+}
+
+textarea {
+  min-height: 52px;
+  max-height: 112px;
+  resize: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 15px;
+  color: var(--ink);
+  background: #ffffff;
+  line-height: 1.35;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
+}
+
+.composer button {
+  min-width: 104px;
+  padding: 0 18px;
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.caregiver-composer button {
+  min-width: 72px;
+  padding: 0 15px;
+  background: var(--brand);
+  color: #ffffff;
+}
+
+button:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.password-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(29, 37, 35, 0.42);
+  z-index: 20;
+}
+
+.password-dialog {
+  display: grid;
+  gap: 12px;
+  width: min(380px, 100%);
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.password-dialog label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.password-dialog input {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 13px;
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+}
+
+.password-dialog input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(47, 111, 115, 0.16);
+}
+
+.warning-dialog p {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.password-error {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.password-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.admin-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 35px rgba(29, 37, 35, 0.08);
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+  gap: 16px;
+  min-height: 0;
+}
+
+.admin-sidebar,
+.admin-dataset-card {
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 35px rgba(29, 37, 35, 0.08);
+}
+
+.admin-sidebar {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.admin-account-list {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  overflow-y: auto;
+}
+
+.admin-account-button {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf8;
+  color: var(--ink);
+  text-align: left;
+}
+
+.admin-account-button strong {
+  color: var(--brand-dark);
+  font-size: 0.95rem;
+}
+
+.admin-account-button span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.admin-account-button.is-active {
+  border-color: var(--brand);
+  background: var(--assistant);
+}
+
+.admin-dataset-card {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+  overflow: hidden;
+}
+
+.admin-insight-card {
+  grid-column: 1 / -1;
+  grid-template-rows: auto auto auto auto auto auto auto;
+  overflow: visible;
+}
+
+.admin-insight-section {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.admin-insight-section h3 {
+  margin: 0;
+  color: var(--brand-dark);
+  font-size: 1rem;
+}
+
+.admin-insight-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-insight-item {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.admin-insight-item strong {
+  color: var(--brand-dark);
+  font-size: 1rem;
+}
+
+.admin-insight-item p,
+.admin-insight-item span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.admin-insight-bullets {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.admin-insight-bullets li {
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.admin-table-wrap {
+  max-height: none;
+  min-height: 0;
+}
+
+/* Visual refresh */
+.top-bar,
+.test-clock,
+.patient-panel,
+.caregiver-panel,
+.clock-panel,
+.clock-schedule-panel,
+.admin-header,
+.admin-sidebar,
+.admin-dataset-card,
+.auth-card {
+  border-color: rgba(198, 211, 216, 0.9);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-soft);
+}
+
+.top-bar {
+  padding: 10px;
+  border: 1px solid rgba(198, 211, 216, 0.9);
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+}
+
+.role-tabs,
+.auth-tabs,
+.caregiver-subtabs {
+  border-color: transparent;
+  background: #eaf0f2;
+  box-shadow: none;
+}
+
+.role-tab,
+.auth-tab,
+.caregiver-subtab {
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.role-tab:hover,
+.auth-tab:hover,
+.caregiver-subtab:hover,
+.ghost-button:hover,
+.patient-action:hover,
+.admin-account-button:hover {
+  transform: translateY(-1px);
+}
+
+.role-tab.is-active,
+.auth-tab.is-active,
+.caregiver-subtab.is-active {
+  background: linear-gradient(180deg, var(--brand), var(--brand-dark));
+  box-shadow: 0 8px 18px rgba(20, 86, 93, 0.18);
+}
+
+.language-tool select,
+.auth-form input,
+.routine-form input,
+.routine-form select,
+.password-dialog input,
+textarea,
+.test-clock select,
+.test-clock input {
+  border-color: var(--line);
+  background: #fbfcfc;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background 140ms ease;
+}
+
+.language-tool select:focus,
+.auth-form input:focus,
+.routine-form input:focus,
+.routine-form select:focus,
+.password-dialog input:focus,
+textarea:focus,
+.test-clock select:focus,
+.test-clock input:focus {
+  border-color: var(--brand);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(39, 125, 132, 0.14);
+}
+
+.ghost-button,
+.primary-button,
+.icon-button,
+.composer button,
+.caregiver-composer button,
+.patient-action,
+.danger-button,
+.danger-link-button {
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.ghost-button,
+.icon-button {
+  background: #f7fafb;
+  border-color: var(--line);
+}
+
+.ghost-button:hover,
+.icon-button:hover {
+  background: #ffffff;
+  border-color: var(--line-strong);
+  box-shadow: 0 6px 16px rgba(31, 49, 54, 0.08);
+}
+
+.primary-button,
+.composer button,
+.caregiver-composer button {
+  background: linear-gradient(180deg, var(--brand), var(--brand-dark));
+  box-shadow: 0 8px 18px rgba(20, 86, 93, 0.16);
+}
+
+.primary-button:hover,
+.composer button:hover,
+.caregiver-composer button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(20, 86, 93, 0.2);
+}
+
+.test-clock {
+  padding: 14px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 251, 0.95));
+}
+
+.clock-readout {
+  display: grid;
+  gap: 2px;
+}
+
+.clock-readout strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.patient-panel,
+.caregiver-panel {
+  box-shadow: var(--shadow);
+}
+
+.app-header,
+.caregiver-header {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 251, 0.8));
+}
+
+.app-header {
+  border-bottom-color: var(--line);
+}
+
+.status-row {
+  background: #fbfcfc;
+}
+
+.status-dot {
+  box-shadow: 0 0 0 4px rgba(98, 169, 107, 0.14);
+}
+
+.patient-focus {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(229, 244, 245, 0.42));
+}
+
+.patient-task-card {
+  border-color: rgba(198, 211, 216, 0.95);
+  background:
+    linear-gradient(180deg, #ffffff, #fbfdfd);
+  box-shadow: 0 14px 34px rgba(31, 49, 54, 0.1);
+}
+
+.patient-task-card .eyebrow {
+  color: var(--brand);
+}
+
+.patient-task-card h2 {
+  color: var(--brand-dark);
+}
+
+.patient-instruction {
+  color: #132926;
+}
+
+.patient-action {
+  background: #ffffff;
+  border-color: var(--line);
+  box-shadow: 0 6px 18px rgba(31, 49, 54, 0.07);
+}
+
+.patient-action:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: 0 10px 24px rgba(31, 49, 54, 0.1);
+}
+
+.patient-action.primary-action {
+  background: linear-gradient(180deg, #2f8f96, var(--brand-dark));
+  box-shadow: 0 14px 28px rgba(20, 86, 93, 0.22);
+}
+
+.patient-action.issue-action {
+  border-color: rgba(185, 93, 55, 0.28);
+  background: var(--accent-soft);
+  color: #934420;
+}
+
+.patient-action.issue-action:hover {
+  border-color: var(--accent);
+  background: #ffe7dc;
+}
+
+.patient-reminder-status {
+  padding: 10px 12px;
+  border: 1px solid rgba(198, 211, 216, 0.7);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.patient-chat-area {
+  border-top-color: var(--line);
+  background: #fbfcfc;
+}
+
+.messages {
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.message p,
+.caregiver-chat-message {
+  box-shadow: 0 4px 14px rgba(31, 49, 54, 0.06);
+}
+
+.message.assistant p,
+.caregiver-chat-message.assistant {
+  background: var(--assistant);
+}
+
+.message.user p,
+.caregiver-chat-message.caregiver {
+  background: linear-gradient(180deg, var(--user), #132e33);
+}
+
+.avatar {
+  background: linear-gradient(180deg, var(--brand), var(--brand-dark));
+}
+
+.caregiver-panel {
+  background: rgba(255, 255, 255, 0.93);
+}
+
+.caregiver-update,
+.recent-events,
+.caregiver-chat,
+.alert-panel,
+.routine-manager,
+.insight-panel,
+.dataset-panel,
+.stat-card,
+.routine-item,
+.event-item,
+.admin-account-button {
+  border-color: rgba(198, 211, 216, 0.88);
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(31, 49, 54, 0.06);
+}
+
+.stat-card {
+  background: linear-gradient(180deg, #ffffff, var(--panel-soft));
+}
+
+.stat-card span {
+  color: var(--brand-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-title-row {
+  padding-bottom: 2px;
+}
+
+.section-title-row h3,
+.caregiver-chat h3,
+.recent-events h3 {
+  color: #182927;
+}
+
+.alert-panel {
+  border-color: rgba(185, 93, 55, 0.28);
+  background: linear-gradient(180deg, #ffffff, #fffaf7);
+}
+
+.alert-item {
+  border-color: rgba(185, 93, 55, 0.24);
+  background: var(--accent-soft);
+}
+
+.danger-button,
+.danger-link-button {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: rgba(164, 59, 53, 0.28);
+}
+
+.danger-button:hover,
+.danger-link-button:hover {
+  background: #ffe3df;
+  border-color: rgba(164, 59, 53, 0.5);
+}
+
+.dataset-table-wrap {
+  border-color: var(--line);
+  background: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.dataset-table th {
+  background: #eef5f6;
+  color: var(--brand-dark);
+}
+
+.dataset-table tbody tr:nth-child(even) {
+  background: #fbfcfc;
+}
+
+.dataset-table tbody tr:hover {
+  background: var(--brand-soft);
+}
+
+.admin-panel {
+  color: var(--ink);
+}
+
+.admin-account-button.is-active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: 0 8px 20px rgba(20, 86, 93, 0.12);
+}
+
+.password-backdrop {
+  background: rgba(21, 33, 31, 0.48);
+  backdrop-filter: blur(5px);
+}
+
+.password-dialog {
+  border-color: var(--line-strong);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(39, 125, 132, 0.24);
+  outline-offset: 2px;
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    padding: 18px;
+  }
+
+  .test-clock {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clock-readout {
+    min-width: 0;
+  }
+
+  .clock-controls {
+    justify-content: stretch;
+  }
+
+  .clock-field {
+    flex: 1 1 130px;
+  }
+
+  .test-clock input,
+  .test-clock select {
+    width: 100%;
+  }
+
+  .patient-panel {
+    width: 100%;
+  }
+
+  .top-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .role-tabs {
+    min-width: 0;
+  }
+
+  .language-tool {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .account-bar {
+    justify-content: space-between;
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 8px;
+    height: 100dvh;
+    padding: 0 0 env(safe-area-inset-bottom);
+  }
+
+  .role-tabs {
+    margin: 10px 10px 0;
+  }
+
+  .auth-panel {
+    padding: 10px;
+  }
+
+  .auth-card {
+    padding: 18px;
+  }
+
+  .auth-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .account-bar {
+    margin: 0 10px;
+  }
+
+  .test-clock {
+    margin: 0 10px;
+  }
+
+  .clock-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .clock-action {
+    width: 100%;
+  }
+
+  .patient-panel,
+  .caregiver-panel {
+    width: 100%;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .patient-panel {
+    height: 100%;
+  }
+
+  .caregiver-panel {
+    height: 100%;
+    border-top: 1px solid var(--line);
+    overflow-y: auto;
+  }
+
+  .app-header,
+  .status-row,
+  .messages,
+  .composer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .app-header {
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .ghost-button {
+    padding: 0 12px;
+  }
+
+  .patient-focus {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .patient-task-card {
+    min-height: 220px;
+    padding: 20px;
+  }
+
+  .patient-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .patient-action {
+    min-height: 64px;
+  }
+
+  .composer {
+    grid-template-columns: 1fr;
+    padding-bottom: 12px;
+  }
+
+  .composer button {
+    width: 100%;
+  }
+
+  .caregiver-header,
+  .stats-grid,
+  .caregiver-update,
+  .recent-events,
+  .caregiver-chat,
+  .alert-panel,
+  .routine-manager,
+  .insight-panel,
+  .dataset-panel,
+  .caregiver-subtabs {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .caregiver-header {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 18px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .caregiver-subtabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .caregiver-composer {
+    grid-template-columns: 1fr;
+  }
+
+  .routine-form,
+  .insight-grid,
+  .dataset-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .caregiver-composer button {
+    width: 100%;
+  }
+
+  .admin-panel {
+    padding: 10px;
+  }
+
+  .admin-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-header .header-actions {
+    width: 100%;
+  }
+
+  .admin-header .header-actions button {
+    flex: 1;
+  }
+}
+
+/* Viewport-fit layout: no full-page or panel scrolling */
+html,
+body {
+  overflow: hidden;
+}
+
+.app-shell {
+  height: 100dvh;
+  padding: clamp(10px, 1.6vw, 18px);
+}
+
+.app-content {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+}
+
+.top-bar {
+  min-height: 0;
+  padding: 8px;
+}
+
+.role-tabs {
+  min-width: 0;
+}
+
+.role-tab {
+  min-height: 40px;
+}
+
+.language-tool select {
+  min-height: 38px;
+}
+
+.account-bar .ghost-button {
+  min-height: 38px;
+}
+
+.test-clock {
+  min-height: 0;
+  padding: 8px 12px;
+}
+
+.clock-readout {
+  min-width: 190px;
+}
+
+.test-clock .eyebrow {
+  margin-bottom: 0;
+  font-size: 0.68rem;
+}
+
+.test-clock strong {
+  font-size: 0.94rem;
+}
+
+.test-clock select,
+.test-clock input,
+.clock-action {
+  min-height: 34px;
+}
+
+.patient-panel:not(.is-chat-open) {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.patient-panel,
+.caregiver-panel,
+.admin-panel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-header,
+.caregiver-header {
+  min-height: 0;
+  padding: 14px 18px 12px;
+}
+
+.app-header h1,
+.admin-header h1 {
+  font-size: 1.55rem;
+}
+
+.interface-greeting {
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  gap: 8px;
+}
+
+.icon-button,
+.ghost-button,
+.primary-button {
+  min-height: 38px;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+}
+
+.status-row {
+  min-height: 38px;
+  padding: 7px 18px;
+  font-size: 0.88rem;
+}
+
+.patient-focus {
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 330px);
+  gap: 14px;
+  min-height: 0;
+  padding: 16px 18px;
+  overflow: hidden;
+}
+
+.patient-task-card {
+  min-height: 0;
+  padding: 20px;
+}
+
+.patient-task-card h2 {
+  font-size: clamp(1.35rem, 2.8vw, 2.2rem);
+}
+
+.patient-instruction {
+  font-size: clamp(1.25rem, 2.9vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.patient-actions {
+  align-content: stretch;
+  gap: 9px;
+  min-height: 0;
+}
+
+.patient-action {
+  min-height: 0;
+  padding: 10px 14px;
+  font-size: 1rem;
+}
+
+.patient-action.primary-action {
+  min-height: 0;
+  font-size: 1.15rem;
+}
+
+.patient-reminder-status {
+  padding: 8px 10px;
+  font-size: 0.82rem;
+}
+
+.patient-panel.is-chat-open {
+  grid-template-rows: auto auto minmax(108px, 0.42fr) minmax(0, 0.58fr);
+}
+
+.patient-panel.is-chat-open .patient-focus {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  padding: 10px 14px;
+}
+
+.patient-panel.is-chat-open .patient-task-card {
+  padding: 12px;
+}
+
+.patient-panel.is-chat-open .patient-task-meta,
+.patient-panel.is-chat-open .patient-reminder-status {
+  display: none;
+}
+
+.patient-chat-area,
+.messages,
+.caregiver-chat-messages {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.messages {
+  gap: 9px;
+  padding: 14px 18px;
+}
+
+.message {
+  max-width: min(620px, 92%);
+}
+
+.message p {
+  padding: 10px 12px;
+  line-height: 1.35;
+}
+
+.composer,
+.caregiver-composer {
+  padding: 0 18px 12px;
+}
+
+textarea {
+  min-height: 42px;
+  max-height: 72px;
+  padding: 10px 12px;
+}
+
+.caregiver-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 10px;
+  padding: 0 14px 14px;
+  overflow: hidden;
+}
+
+.caregiver-header {
+  grid-column: 1 / -1;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.caregiver-chat,
+.alert-panel,
+.routine-manager,
+.insight-panel,
+.caregiver-update,
+.recent-events,
+.dataset-panel,
+.stats-grid,
+.caregiver-subtabs {
+  margin: 0;
+}
+
+.caregiver-chat {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 0;
+  padding: 12px;
+}
+
+.alert-panel {
+  grid-column: 1 / -1;
+  min-height: 0;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.alert-list,
+.event-list,
+.routine-list {
+  gap: 7px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.alert-item,
+.event-item,
+.routine-item {
+  padding: 9px 10px;
+}
+
+.alert-item p,
+.event-item p,
+.routine-item p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.caregiver-subtabs {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+}
+
+.caregiver-subtab {
+  min-height: 36px;
+  min-width: 0;
+  padding: 0 8px;
+  font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caregiver-section-panel {
+  grid-column: 1 / -1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.caregiver-section-panel.is-active {
+  display: grid;
+  min-height: 0;
+  height: 100%;
+  gap: 10px;
+}
+
+#caregiverSection-performance.is-active {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+#caregiverSection-schedule.is-active,
+#caregiverSection-update.is-active,
+#caregiverSection-activity.is-active {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.routine-manager,
+.insight-panel,
+.caregiver-update,
+.recent-events,
+.dataset-panel,
+.caregiver-chat,
+.alert-panel {
+  min-height: 0;
+  max-height: 100%;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.caregiver-chat.is-active {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.alert-panel.is-active {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.alert-panel.is-active .alert-list,
+.recent-events .event-list,
+.routine-manager .routine-list {
+  min-height: 0;
+}
+
+.routine-form {
+  grid-template-columns: 1.2fr 1fr 0.75fr 0.85fr 0.55fr 0.55fr auto;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.routine-form textarea {
+  grid-column: 1 / 6;
+  min-height: 42px;
+  max-height: 48px;
+}
+
+.routine-form button {
+  grid-column: 6 / 8;
+}
+
+.routine-form input,
+.routine-form select {
+  min-height: 36px;
+  padding: 0 9px;
+  font-size: 0.88rem;
+}
+
+.routine-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-height: calc(100% - 116px);
+}
+
+.routine-item-header strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stat-card {
+  min-height: 70px;
+  padding: 11px;
+}
+
+.stat-card span {
+  margin-bottom: 4px;
+  font-size: 1.35rem;
+}
+
+.stat-card p {
+  font-size: 0.78rem;
+}
+
+.insight-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.caregiver-update p {
+  display: -webkit-box;
+  margin-top: 8px;
+  overflow: hidden;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 8;
+}
+
+.dataset-panel {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.dataset-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dataset-grid .stat-card {
+  min-height: 64px;
+}
+
+.dataset-table-wrap {
+  max-height: none;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dataset-table {
+  table-layout: fixed;
+  font-size: 0.72rem;
+}
+
+.dataset-table th,
+.dataset-table td {
+  padding: 7px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dataset-table td:last-child {
+  min-width: 0;
+}
+
+.admin-panel {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+}
+
+.admin-header {
+  padding: 14px 16px;
+}
+
+.admin-layout {
+  grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+}
+
+.admin-sidebar,
+.admin-dataset-card {
+  padding: 12px;
+  overflow: hidden;
+}
+
+.admin-account-list {
+  overflow: hidden;
+}
+
+.admin-account-button {
+  padding: 9px 10px;
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    padding: 8px;
+  }
+
+  .top-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 190px) auto;
+    align-items: center;
+  }
+
+  .test-clock {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .clock-controls {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(70px, auto);
+  }
+
+  .patient-focus {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 290px);
+    padding: 12px;
+  }
+
+  .caregiver-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    padding: 6px;
+  }
+
+  .app-content {
+    gap: 6px;
+  }
+
+  .top-bar {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .role-tabs,
+  .account-bar,
+  .test-clock {
+    margin: 0;
+  }
+
+  .test-clock {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .clock-controls {
+    grid-auto-flow: initial;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .language-tool {
+    display: none;
+  }
+
+  .patient-focus,
+  .patient-panel.is-chat-open .patient-focus {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .patient-task-card {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .patient-instruction {
+    font-size: 1.18rem;
+  }
+
+  .patient-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .patient-action,
+  .patient-action.primary-action {
+    min-height: 42px;
+    font-size: 0.88rem;
+  }
+
+  .patient-reminder-status {
+    grid-column: 1 / -1;
+  }
+
+  .caregiver-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    padding: 0 8px 8px;
+  }
+
+  .caregiver-chat,
+  .alert-panel,
+  .caregiver-subtabs,
+  .caregiver-section-panel {
+    grid-column: 1;
+  }
+
+  .caregiver-header,
+  .stats-grid,
+  .caregiver-update,
+  .recent-events,
+  .caregiver-chat,
+  .alert-panel,
+  .routine-manager,
+  .insight-panel,
+  .dataset-panel,
+  .caregiver-subtabs {
+    margin: 0;
+  }
+
+  .caregiver-header {
+    padding-top: 10px;
+  }
+
+  .caregiver-subtabs {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .caregiver-subtab {
+    min-height: 34px;
+    padding: 0 4px;
+    font-size: 0.68rem;
+  }
+
+  .routine-form {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .routine-form textarea {
+    grid-column: 1 / -1;
+  }
+
+  .routine-form button {
+    grid-column: 1 / -1;
+  }
+
+  .routine-list {
+    grid-template-columns: 1fr;
+    max-height: calc(100% - 190px);
+  }
+
+  .stats-grid,
+  .dataset-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(90px, 0.28fr) minmax(0, 1fr);
+  }
+
+  .admin-sidebar {
+    max-height: none;
+  }
+}
+
+/* Controlled scrolling for content-heavy panels */
+.routine-manager,
+.insight-panel,
+.recent-events,
+.dataset-panel,
+.admin-sidebar,
+.admin-dataset-card {
+  display: grid;
+  min-height: 0;
+}
+
+.routine-manager {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.recent-events,
+.admin-sidebar {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.insight-panel {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.dataset-panel,
+.admin-dataset-card {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.routine-list,
+.insight-grid,
+.event-list,
+.alert-list,
+.clock-task-list,
+.caregiver-chat-messages,
+.messages,
+.dataset-table-wrap,
+.admin-account-list {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(43, 100, 104, 0.35) transparent;
+}
+
+.routine-list::-webkit-scrollbar,
+.insight-grid::-webkit-scrollbar,
+.event-list::-webkit-scrollbar,
+.alert-list::-webkit-scrollbar,
+.clock-task-list::-webkit-scrollbar,
+.caregiver-chat-messages::-webkit-scrollbar,
+.messages::-webkit-scrollbar,
+.dataset-table-wrap::-webkit-scrollbar,
+.admin-account-list::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.routine-list::-webkit-scrollbar-thumb,
+.insight-grid::-webkit-scrollbar-thumb,
+.event-list::-webkit-scrollbar-thumb,
+.alert-list::-webkit-scrollbar-thumb,
+.clock-task-list::-webkit-scrollbar-thumb,
+.caregiver-chat-messages::-webkit-scrollbar-thumb,
+.messages::-webkit-scrollbar-thumb,
+.dataset-table-wrap::-webkit-scrollbar-thumb,
+.admin-account-list::-webkit-scrollbar-thumb {
+  background: rgba(43, 100, 104, 0.28);
+  border-radius: 999px;
+}
+
+.routine-list::-webkit-scrollbar-track,
+.insight-grid::-webkit-scrollbar-track,
+.event-list::-webkit-scrollbar-track,
+.alert-list::-webkit-scrollbar-track,
+.clock-task-list::-webkit-scrollbar-track,
+.caregiver-chat-messages::-webkit-scrollbar-track,
+.messages::-webkit-scrollbar-track,
+.dataset-table-wrap::-webkit-scrollbar-track,
+.admin-account-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.routine-list {
+  max-height: none;
+}
+
+.dataset-table-wrap {
+  max-height: none;
+  overflow: auto;
+}
+
+.caregiver-update {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(43, 100, 104, 0.35) transparent;
+}
+
+.caregiver-update p {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
+.alert-panel.is-active {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.caregiver-chat.is-active {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+@media (max-width: 680px) {
+  .routine-list {
+    max-height: none;
+  }
+}
+
+/* Separate dataset interface */
+.role-tabs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.caregiver-subtabs {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.dataset-view {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-soft);
+}
+
+.dataset-view .dataset-panel {
+  height: 100%;
+  margin: 0;
+  padding: 14px;
+}
+
+.patient-chat-area {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.patient-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 10px 18px 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.patient-chat-header h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.patient-chat-back {
+  min-height: 38px;
+  padding: 0 14px;
+}
+
+@media (max-width: 680px) {
+  .caregiver-subtabs {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .dataset-view {
+    border-radius: 8px;
+  }
+
+  .patient-chat-header {
+    padding: 8px 12px 7px;
+  }
+}
+
+/* Caregiver subtabs fill the caregiver workspace, not the whole browser */
+.caregiver-panel {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.caregiver-header {
+  grid-row: 1;
+}
+
+.caregiver-subtabs {
+  grid-row: 2;
+}
+
+.caregiver-section-panel {
+  grid-row: 3;
+  align-self: stretch;
+}
+
+.caregiver-section-panel.is-active {
+  min-height: 0;
+  height: 100%;
+}
+
+.caregiver-chat,
+.alert-panel,
+.routine-manager,
+.insight-panel,
+.caregiver-update,
+.recent-events {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
+
+/* Patient chat replaces the patient workspace content */
+.patient-panel.is-chat-open {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.patient-panel.is-chat-open .patient-focus {
+  display: none;
+}
+
+.patient-panel.is-chat-open .patient-chat-area {
+  grid-row: 3;
+  height: 100%;
+  min-height: 0;
+}
+
+.patient-caregiver-chat-area {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+}
+
+.patient-panel.is-chat-open .patient-caregiver-chat-area {
+  grid-row: 3;
+  height: 100%;
+  min-height: 0;
+}
+
+.caregiver-patient-chat {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 0;
+  padding: 12px;
+}
+
+.direct-chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fbfa;
+}
+
+.direct-chat-message {
+  display: grid;
+  gap: 4px;
+  max-width: min(620px, 92%);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.direct-chat-message.patient {
+  align-self: flex-start;
+}
+
+.direct-chat-message.caregiver {
+  align-self: flex-end;
+  border-color: rgba(37, 108, 92, 0.35);
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.direct-chat-message span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.76;
+}
+
+.direct-chat-message p {
+  margin: 0;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+/* Final visual refinement pass */
+.app-shell {
+  width: min(1260px, 100%);
+  padding: clamp(8px, 1.5vw, 18px);
+}
+
+.top-bar {
+  align-items: stretch;
+}
+
+.app-content {
+  gap: 10px;
+}
+
+.app-header {
+  min-height: 0;
+  padding: 14px 18px 10px;
+}
+
+.app-header h1 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.status-row {
+  min-height: 34px;
+}
+
+.role-tabs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.role-tab,
+.caregiver-subtab,
+.auth-tab {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.patient-panel:not(.is-chat-open) {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.patient-panel:not(.is-chat-open) .patient-focus {
+  position: relative;
+  display: block;
+  padding: clamp(12px, 2vw, 24px);
+  overflow: hidden;
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card {
+  position: absolute;
+  top: clamp(8px, 1.2vh, 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(880px, calc(100% - 40px));
+  min-height: 0;
+  max-height: 50px;
+  align-content: center;
+  gap: 2px;
+  padding: 6px 16px;
+  overflow: hidden;
+  border-color: rgba(39, 125, 132, 0.18);
+  background: linear-gradient(180deg, #ffffff, #f9fcfc);
+  box-shadow: 0 10px 28px rgba(31, 49, 54, 0.08);
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card .eyebrow,
+.patient-panel:not(.is-chat-open) .patient-task-meta {
+  display: none;
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card h2 {
+  margin: 0;
+  font-size: clamp(1rem, 1.25vw, 1.24rem);
+  line-height: 1.05;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.patient-panel:not(.is-chat-open) .patient-instruction {
+  margin: 0;
+  font-size: clamp(0.88rem, 1.05vw, 1rem);
+  line-height: 1.1;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.patient-panel:not(.is-chat-open) .patient-actions {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(880px, calc(100% - 40px));
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.patient-panel:not(.is-chat-open) .patient-action {
+  min-height: clamp(58px, 8vh, 78px);
+  border: 2px solid rgba(20, 86, 93, 0.24);
+  padding: 14px 16px;
+  background: #ffffff;
+  color: var(--brand-dark);
+  font-size: clamp(1.12rem, 1.65vw, 1.35rem);
+  font-weight: 950;
+  line-height: 1.15;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(31, 49, 54, 0.08);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action:hover {
+  border-color: rgba(39, 125, 132, 0.5);
+  background: var(--brand-soft);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.primary-action {
+  grid-column: 1 / -1;
+  min-height: clamp(72px, 10vh, 94px);
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+  font-size: clamp(1.55rem, 2.7vw, 2.1rem);
+  box-shadow: 0 16px 34px rgba(20, 86, 93, 0.24);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.issue-action {
+  border-color: rgba(164, 59, 53, 0.22);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.patient-panel:not(.is-chat-open) .patient-reminder-status {
+  position: absolute;
+  bottom: clamp(10px, 2vh, 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(920px, calc(100% - 32px));
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.caregiver-panel {
+  gap: 12px;
+}
+
+.caregiver-header {
+  gap: 14px;
+  padding: 18px 20px 10px;
+}
+
+.caregiver-header .header-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.caregiver-subtabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 20px;
+  padding: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.caregiver-subtab {
+  flex: 1 0 118px;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.caregiver-section-panel.is-active {
+  padding: 0 20px 18px;
+}
+
+.caregiver-section-panel.is-active > section,
+.caregiver-chat.caregiver-section-panel.is-active,
+.caregiver-patient-chat.caregiver-section-panel.is-active,
+.alert-panel.caregiver-section-panel.is-active {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.caregiver-chat.caregiver-section-panel.is-active,
+.caregiver-patient-chat.caregiver-section-panel.is-active,
+.alert-panel.caregiver-section-panel.is-active {
+  width: auto;
+  margin: 0 20px 18px;
+  padding: 14px;
+}
+
+.routine-manager,
+.insight-panel,
+.caregiver-update,
+.recent-events {
+  padding: 14px;
+}
+
+.messages,
+.caregiver-chat-messages,
+.direct-chat-messages,
+.alert-list,
+.event-list,
+.routine-list {
+  scrollbar-width: thin;
+}
+
+/* Admin has separate full interfaces for account datasets and dummy insights */
+.admin-panel {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.admin-subtabs {
+  display: flex;
+  gap: 8px;
+  min-height: 52px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-soft);
+}
+
+.admin-subtab {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-dark);
+  font-weight: 900;
+}
+
+.admin-subtab.is-active {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.admin-section-panel {
+  min-height: 0;
+}
+
+.admin-section-panel.is-active {
+  display: grid;
+}
+
+.admin-layout.admin-section-panel.is-active {
+  grid-template-columns: minmax(230px, 290px) minmax(0, 1fr);
+  gap: 14px;
+  overflow: hidden;
+}
+
+.admin-table-wrap {
+  overflow: auto;
+}
+
+.admin-dummy-interface {
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-soft);
+}
+
+.admin-dummy-interface.is-active {
+  display: block;
+}
+
+.admin-dummy-hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-dummy-hero h2 {
+  margin: 0;
+  color: var(--brand-dark);
+  font-size: clamp(1.4rem, 2vw, 2rem);
+}
+
+.admin-dummy-summary {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.admin-dummy-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.admin-dummy-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.admin-dummy-interface .admin-insight-section {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(31, 49, 54, 0.06);
+}
+
+.admin-dummy-interface .admin-insight-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-dummy-grid .admin-insight-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 760px) {
+  .top-bar {
+    flex-direction: column;
+  }
+
+  .language-tool,
+  .account-bar {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-actions {
+    position: static;
+    transform: none;
+    grid-template-columns: minmax(0, 1fr);
+    width: min(480px, 100%);
+    margin: 0 auto;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-focus {
+    display: grid;
+    align-content: center;
+    gap: 12px;
+    overflow: auto;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-task-card,
+  .patient-panel:not(.is-chat-open) .patient-reminder-status {
+    position: static;
+    transform: none;
+    width: min(480px, 100%);
+    margin: 0 auto;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action,
+  .patient-panel:not(.is-chat-open) .patient-action.primary-action {
+    grid-column: auto;
+    min-height: 70px;
+  }
+
+  .caregiver-header {
+    align-items: stretch;
+  }
+
+  .caregiver-header .header-actions {
+    justify-content: stretch;
+  }
+
+  .caregiver-header .header-actions > button {
+    flex: 1 1 140px;
+  }
+
+  .admin-insight-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-subtabs,
+  .admin-dummy-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-layout.admin-section-panel.is-active,
+  .admin-dummy-grid,
+  .admin-dummy-notes,
+  .admin-dummy-summary,
+  .admin-dummy-interface .admin-insight-list,
+  .admin-dummy-grid .admin-insight-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Login role selection and caregiver-owned tools */
+.auth-panel {
+  height: 100%;
+  padding: 12px 0;
+  overflow: auto;
+}
+
+.auth-preferences {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.72fr);
+  align-items: end;
+  gap: 12px;
+}
+
+.auth-role-picker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.auth-role-picker legend,
+.auth-language > span {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.auth-role-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.auth-role-option {
+  position: relative;
+  min-width: 0;
+}
+
+.auth-role-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.auth-role-option span {
+  display: grid;
+  min-height: 40px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--brand-dark);
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.auth-role-option input:checked + span {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.auth-role-option input:focus-visible + span {
+  box-shadow: 0 0 0 3px rgba(39, 125, 132, 0.18);
+}
+
+.auth-language {
+  display: grid;
+}
+
+.auth-language select {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 10px;
+  color: var(--ink);
+  background: #ffffff;
+  font: inherit;
+  font-weight: 750;
+  outline: none;
+}
+
+.auth-language select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(39, 125, 132, 0.18);
+}
+
+.top-bar {
+  min-height: 54px;
+  padding: 6px 8px 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-soft);
+}
+
+.active-role-label {
+  align-self: center;
+  color: var(--brand-dark);
+  font-size: 1rem;
+}
+
+.patient-panel:not(.is-chat-open) .patient-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 900px;
+}
+
+.caregiver-subtabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  overflow: visible;
+}
+
+.caregiver-subtab {
+  min-width: 0;
+}
+
+#caregiverSection-dataset.is-active,
+#caregiverSection-clock.is-active,
+#caregiverSection-reminders.is-active {
+  min-height: 0;
+  overflow: auto;
+}
+
+#caregiverSection-dataset .dataset-panel {
+  min-height: 100%;
+}
+
+#caregiverSection-clock.is-active {
+  align-content: start;
+  gap: 12px;
+}
+
+#caregiverSection-clock .app-header,
+#caregiverSection-clock .test-clock,
+#caregiverSection-clock .clock-schedule-panel {
+  width: 100%;
+  flex: none;
+}
+
+.reminder-settings {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  min-height: 100%;
+  padding: 22px;
+}
+
+.reminder-toggle {
+  min-width: 86px;
+  min-height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.reminder-toggle.is-on {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.reminder-setting-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .auth-preferences {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .top-bar {
+    align-items: stretch;
+  }
+
+  .active-role-label {
+    text-align: center;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .caregiver-subtabs {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .caregiver-subtab {
+    flex: 0 0 132px;
+  }
+}
+
+/* Dataset workspace: visible actions and independent two-axis scrolling */
+#caregiverSection-dataset.is-active {
+  display: grid;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#caregiverSection-dataset .dataset-panel {
+  grid-template-rows: auto auto minmax(240px, 1fr);
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.dataset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+#caregiverSection-dataset .dataset-table-wrap {
+  width: 100%;
+  min-width: 0;
+  min-height: 240px;
+  max-height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+#caregiverSection-dataset .dataset-table {
+  width: 100%;
+  min-width: 1180px;
+  table-layout: auto;
+}
+
+#caregiverSection-dataset .dataset-table th,
+#caregiverSection-dataset .dataset-table td {
+  min-width: 96px;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+#caregiverSection-dataset .dataset-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+#caregiverSection-dataset .dataset-table th:nth-child(3),
+#caregiverSection-dataset .dataset-table td:nth-child(3) {
+  min-width: 180px;
+}
+
+#caregiverSection-dataset .dataset-table th:last-child,
+#caregiverSection-dataset .dataset-table td:last-child {
+  min-width: 280px;
+  max-width: 380px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  #caregiverSection-dataset .section-title-row {
+    align-items: stretch;
+  }
+
+  .dataset-actions {
+    justify-content: stretch;
+  }
+
+  .dataset-actions > * {
+    flex: 1 1 140px;
+    text-align: center;
+  }
+}
+
+/* Caregiver home and focused tool navigation */
+.caregiver-panel {
+  position: relative;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #f5f8f8;
+}
+
+.caregiver-header {
+  grid-row: 1;
+  margin: 0;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.caregiver-header h2 {
+  color: #152b2d;
+  font-size: 1.35rem;
+}
+
+.caregiver-section-toolbar {
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  margin: 0;
+  padding: 7px 20px;
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.caregiver-section-toolbar[hidden] {
+  display: none;
+}
+
+.caregiver-section-toolbar > strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #21383a;
+  font-size: 0.96rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caregiver-home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--brand-dark);
+  font: inherit;
+  font-weight: 850;
+}
+
+.caregiver-home-button:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.caregiver-home-button span {
+  font-size: 1.12rem;
+  line-height: 1;
+}
+
+.caregiver-home.caregiver-section-panel.is-active {
+  grid-row: 2 / 4;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 18px;
+  min-height: 0;
+  height: 100%;
+  padding: 20px;
+  overflow: auto;
+}
+
+.caregiver-home-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.8fr);
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+  padding: 2px 2px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.caregiver-home-summary {
+  min-width: 0;
+}
+
+.caregiver-home-summary h3 {
+  color: #152b2d;
+  font-size: 1.28rem;
+}
+
+.caregiver-home-summary > p:last-child {
+  display: -webkit-box;
+  max-width: 720px;
+  margin: 8px 0 0;
+  overflow: hidden;
+  color: #526468;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.caregiver-home-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.home-kpi {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #d8e1e3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.home-kpi strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #17636a;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.home-kpi span {
+  display: block;
+  color: #627176;
+  font-size: 0.74rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.home-kpi-alert strong {
+  color: #a43b35;
+}
+
+.caregiver-home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+  gap: 12px;
+  min-height: 0;
+}
+
+.caregiver-home-card {
+  --card-accent: #277d84;
+  --card-soft: #edf7f7;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+  min-height: 82px;
+  padding: 14px;
+  border: 1px solid #d6e0e2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1b3133;
+  font: inherit;
+  text-align: left;
+  box-shadow: 0 5px 14px rgba(36, 58, 61, 0.05);
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.caregiver-home-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--card-accent);
+  box-shadow: 0 10px 22px rgba(36, 58, 61, 0.1);
+}
+
+.caregiver-home-card:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--card-accent) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.home-card-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--card-accent) 22%, transparent);
+  border-radius: 8px;
+  background: var(--card-soft);
+  color: var(--card-accent);
+  font-size: 0.84rem;
+  font-weight: 950;
+}
+
+.card-alerts .home-card-icon {
+  font-size: 1.4rem;
+}
+
+.home-card-copy {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.home-card-copy strong {
+  overflow: hidden;
+  color: #1b3133;
+  font-size: 0.98rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-card-copy > span {
+  overflow: hidden;
+  color: #68777b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-patient-chat {
+  --card-accent: #276f8d;
+  --card-soft: #edf6fa;
+}
+
+.card-alerts {
+  --card-accent: #ad403a;
+  --card-soft: #fff1ef;
+}
+
+.card-schedule {
+  --card-accent: #24755f;
+  --card-soft: #eef8f4;
+}
+
+.card-performance {
+  --card-accent: #465f9b;
+  --card-soft: #f0f3fb;
+}
+
+.card-update {
+  --card-accent: #55702f;
+  --card-soft: #f3f7eb;
+}
+
+.card-activity {
+  --card-accent: #8b5a38;
+  --card-soft: #fbf3ed;
+}
+
+.card-dataset {
+  --card-accent: #675a91;
+  --card-soft: #f4f1fa;
+}
+
+.card-clock {
+  --card-accent: #4f6468;
+  --card-soft: #f0f4f5;
+}
+
+.card-reminders {
+  --card-accent: #9b4d6a;
+  --card-soft: #fbf0f4;
+}
+
+.caregiver-panel > .caregiver-section-panel:not(.caregiver-home).is-active {
+  grid-row: 3;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  padding: 12px 20px 20px;
+  overflow: hidden;
+}
+
+.caregiver-panel > .caregiver-chat.caregiver-section-panel.is-active,
+.caregiver-panel > .caregiver-patient-chat.caregiver-section-panel.is-active,
+.caregiver-panel > .alert-panel.caregiver-section-panel.is-active {
+  width: auto;
+  margin: 0;
+  padding: 12px 20px 20px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.caregiver-panel > .caregiver-chat.caregiver-section-panel.is-active > *,
+.caregiver-panel > .caregiver-patient-chat.caregiver-section-panel.is-active > *,
+.caregiver-panel > .alert-panel.caregiver-section-panel.is-active > * {
+  min-width: 0;
+}
+
+.caregiver-aura-launcher {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  z-index: 10;
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border: 1px solid #0f5960;
+  border-radius: 50%;
+  background: #176d74;
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(20, 86, 93, 0.3);
+}
+
+.caregiver-aura-launcher:hover {
+  background: #0f5960;
+  box-shadow: 0 15px 32px rgba(20, 86, 93, 0.36);
+}
+
+.caregiver-aura-launcher:focus-visible {
+  outline: 3px solid rgba(39, 125, 132, 0.3);
+  outline-offset: 3px;
+}
+
+.caregiver-chat-glyph {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 19px;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+}
+
+.caregiver-chat-glyph::after {
+  position: absolute;
+  bottom: -5px;
+  left: 4px;
+  width: 7px;
+  height: 7px;
+  border-bottom: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+  background: #176d74;
+  content: "";
+  transform: skewY(-35deg);
+}
+
+.caregiver-aura-launcher:hover .caregiver-chat-glyph::after {
+  background: #0f5960;
+}
+
+@media (max-width: 900px) {
+  .caregiver-home-overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .caregiver-home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .caregiver-header {
+    align-items: flex-start;
+    padding: 12px 14px;
+  }
+
+  .caregiver-header .header-actions {
+    width: auto;
+  }
+
+  .caregiver-header .header-actions > button {
+    flex: 0 1 auto;
+    min-height: 38px;
+    padding: 0 11px;
+  }
+
+  .caregiver-section-toolbar {
+    padding: 7px 14px;
+  }
+
+  .caregiver-home.caregiver-section-panel.is-active {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .caregiver-home-kpis {
+    grid-template-columns: repeat(3, minmax(88px, 1fr));
+    overflow-x: auto;
+  }
+
+  .caregiver-home-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .caregiver-home-card {
+    min-height: 70px;
+    padding: 10px 12px;
+  }
+
+  .caregiver-panel > .caregiver-section-panel:not(.caregiver-home).is-active,
+  .caregiver-panel > .caregiver-chat.caregiver-section-panel.is-active,
+  .caregiver-panel > .caregiver-patient-chat.caregiver-section-panel.is-active,
+  .caregiver-panel > .alert-panel.caregiver-section-panel.is-active {
+    padding: 10px 14px 14px;
+  }
+
+  .caregiver-aura-launcher {
+    right: 18px;
+    bottom: 18px;
+  }
+}
+
+/* Detailed patient performance report */
+#caregiverSection-performance.is-active {
+  display: block;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+#caregiverSection-performance > .stats-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+#caregiverSection-performance > .stats-grid .stat-card {
+  min-height: 76px;
+  padding: 12px;
+}
+
+.caregiver-detailed-insights {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.caregiver-detailed-insights > .section-title-row {
+  align-items: end;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.caregiver-detailed-insights > .section-title-row h3 {
+  color: #152b2d;
+  font-size: 1.2rem;
+}
+
+.caregiver-insight-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.caregiver-insight-summary .stat-card {
+  min-height: 78px;
+  background: #ffffff;
+  box-shadow: 0 5px 14px rgba(36, 58, 61, 0.05);
+}
+
+.caregiver-insight-columns {
+  display: grid;
+  gap: 20px;
+}
+
+.caregiver-insight-section {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.caregiver-insight-section h4 {
+  margin: 0;
+  color: #21383a;
+  font-size: 1rem;
+}
+
+.caregiver-insight-section > .admin-insight-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.caregiver-insight-section .admin-insight-item {
+  gap: 6px;
+  padding: 14px;
+  border-color: #d6e0e2;
+  background: #ffffff;
+  box-shadow: 0 5px 14px rgba(36, 58, 61, 0.05);
+}
+
+.caregiver-insight-section .admin-insight-item > strong {
+  padding-bottom: 7px;
+  border-bottom: 1px solid #e5ebec;
+  color: #17636a;
+}
+
+.caregiver-insight-section .admin-insight-item > span {
+  margin-top: 5px;
+  padding-top: 8px;
+  border-top: 1px solid #e5ebec;
+  color: #41575b;
+  font-weight: 750;
+}
+
+.caregiver-trend-section > .admin-insight-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.caregiver-insight-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px;
+  padding-top: 2px;
+}
+
+.caregiver-insight-notes > .caregiver-insight-section {
+  padding: 15px;
+  border: 1px solid #d6e0e2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.caregiver-insight-notes .admin-insight-bullets {
+  gap: 10px;
+  padding-left: 20px;
+}
+
+.caregiver-insight-notes .admin-insight-bullets li {
+  color: #43575b;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  #caregiverSection-performance > .stats-grid,
+  .caregiver-insight-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .caregiver-insight-section > .admin-insight-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .caregiver-trend-section > .admin-insight-list,
+  .caregiver-insight-notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  #caregiverSection-performance > .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .caregiver-insight-summary,
+  .caregiver-insight-section > .admin-insight-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Immediate caregiver safety and missed-task notifications */
+.notification-setting-block {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #d6e0e2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.caregiver-alert-setting {
+  border-color: rgba(173, 64, 58, 0.3);
+  background: #fffafa;
+}
+
+.text-alert-setting {
+  border-color: rgba(47, 111, 115, 0.34);
+  background: #f7fbfb;
+}
+
+.sms-toggle {
+  min-width: 110px;
+}
+
+.caregiver-live-alert {
+  position: absolute;
+  right: 94px;
+  bottom: 22px;
+  left: 24px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  width: min(620px, calc(100% - 118px));
+  padding: 14px 16px;
+  border: 1px solid #bd7042;
+  border-left: 5px solid #bd7042;
+  border-radius: 8px;
+  background: #fff8f1;
+  color: #5e351f;
+  box-shadow: 0 16px 36px rgba(70, 47, 36, 0.22);
+}
+
+.caregiver-live-alert[hidden] {
+  display: none;
+}
+
+.caregiver-live-alert.is-emergency {
+  border-color: #a8322d;
+  border-left-color: #a8322d;
+  background: #fff0ef;
+  color: #6f211e;
+}
+
+.caregiver-live-alert-copy {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.caregiver-live-alert-copy strong {
+  font-size: 1rem;
+}
+
+.caregiver-live-alert-copy p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.87rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.caregiver-live-alert-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-alert-view,
+.live-alert-dismiss {
+  min-height: 38px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: #ffffff;
+  color: inherit;
+  font: inherit;
+  font-weight: 850;
+}
+
+.live-alert-view {
+  padding: 0 13px;
+}
+
+.live-alert-dismiss {
+  width: 38px;
+  padding: 0;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+@media (max-width: 700px) {
+  .caregiver-live-alert {
+    right: 14px;
+    bottom: 82px;
+    left: 14px;
+    grid-template-columns: minmax(0, 1fr);
+    width: auto;
+  }
+
+  .caregiver-live-alert-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* Patient current-task card */
+.patient-panel:not(.is-chat-open) .patient-task-card {
+  top: clamp(4px, 1vh, 10px);
+  display: grid;
+  width: min(940px, calc(100% - 48px));
+  min-height: 132px;
+  max-height: none;
+  align-content: center;
+  gap: 7px;
+  padding: 18px 22px 16px 26px;
+  overflow: visible;
+  border: 1px solid #cadbdd;
+  border-left: 6px solid var(--brand);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 32px rgba(31, 65, 68, 0.12);
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card .eyebrow {
+  display: block;
+  margin: 0;
+  color: var(--brand);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card h2 {
+  margin: 0;
+  overflow: visible;
+  color: #16383b;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1.15;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.patient-panel:not(.is-chat-open) .patient-instruction {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: #304d50;
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-meta {
+  display: block;
+  margin: 2px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #e2e9ea;
+  color: #617478;
+  font-size: 0.86rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.patient-panel:not(.is-chat-open) .patient-actions {
+  top: 62%;
+}
+
+@media (max-width: 760px) {
+  .patient-panel:not(.is-chat-open) .patient-focus {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-task-card {
+    position: static;
+    width: min(560px, 100%);
+    min-height: 124px;
+    margin: 0 auto;
+    padding: 16px 18px 14px 20px;
+    transform: none;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-actions {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+    width: min(560px, 100%);
+    margin: 0 auto;
+    transform: none;
+  }
+}
+
+/* 2026 usability and visual polish */
+:root {
+  --bg: #eef2f3;
+  --panel-soft: #f6f8f8;
+  --ink: #172523;
+  --muted: #5c6d70;
+  --line: #d7e0e2;
+  --line-strong: #bdcbce;
+  --brand: #176d74;
+  --brand-dark: #0f555c;
+  --brand-soft: #e7f3f3;
+  --accent: #b75531;
+  --accent-soft: #fff0e9;
+  --danger: #a63832;
+  --danger-soft: #fff0ef;
+  --shadow: 0 16px 38px rgba(29, 48, 52, 0.12);
+  --shadow-soft: 0 7px 20px rgba(29, 48, 52, 0.07);
+}
+
+body {
+  background: var(--bg);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid rgba(23, 109, 116, 0.28);
+  outline-offset: 2px;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.app-shell {
+  width: min(1320px, 100%);
+  padding: 14px;
+}
+
+.app-content {
+  gap: 10px;
+}
+
+.top-bar {
+  min-height: 54px;
+  padding: 7px 8px 7px 16px;
+  border-color: var(--line);
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(29, 48, 52, 0.06);
+  backdrop-filter: none;
+}
+
+.active-role-label {
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 900;
+}
+
+.account-bar {
+  gap: 8px;
+}
+
+.account-bar > span {
+  max-width: 280px;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.ghost-button,
+.icon-button {
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--brand-dark);
+  box-shadow: none;
+}
+
+.ghost-button:hover,
+.icon-button:hover {
+  transform: none;
+  border-color: var(--line-strong);
+  background: var(--panel-soft);
+  box-shadow: none;
+}
+
+.primary-button,
+.composer button,
+.caregiver-composer button {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.primary-button:hover,
+.composer button:hover,
+.caregiver-composer button:hover {
+  transform: none;
+  border-color: var(--brand-dark);
+  background: var(--brand-dark);
+  box-shadow: none;
+}
+
+.auth-card {
+  width: min(500px, 100%);
+  gap: 17px;
+  padding: 26px;
+  border-color: var(--line);
+  background: #ffffff;
+  box-shadow: 0 18px 48px rgba(29, 48, 52, 0.12);
+}
+
+.auth-card h1 {
+  color: var(--ink);
+  font-size: 1.8rem;
+}
+
+.auth-tabs,
+.auth-role-options {
+  border-color: var(--line);
+  background: var(--panel-soft);
+}
+
+.auth-tab,
+.auth-role-option span {
+  min-height: 42px;
+}
+
+.auth-tab:hover {
+  transform: none;
+  background: #ffffff;
+}
+
+.auth-tab.is-active,
+.auth-role-option input:checked + span {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.auth-form {
+  gap: 8px;
+}
+
+.auth-form label {
+  margin-top: 2px;
+  color: #536568;
+}
+
+.auth-form input,
+.auth-language select {
+  min-height: 46px;
+  border-color: var(--line);
+  background: #ffffff;
+}
+
+.patient-panel,
+.caregiver-panel {
+  border-color: var(--line);
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.app-header,
+.caregiver-header {
+  background: #ffffff;
+}
+
+.app-header {
+  padding: 13px 18px 11px;
+}
+
+.app-header h1 {
+  color: var(--ink);
+  font-size: 2rem;
+}
+
+.interface-greeting {
+  color: var(--brand-dark);
+  font-weight: 850;
+}
+
+.status-row {
+  min-height: 38px;
+  padding: 7px 18px;
+  background: #f8fafa;
+}
+
+.current-task {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.patient-panel:not(.is-chat-open) .patient-focus {
+  position: static;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  gap: 26px;
+  min-height: 0;
+  padding: 22px 28px 28px;
+  overflow: auto;
+  background: #f7fafa;
+  scrollbar-gutter: stable;
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card {
+  position: static;
+  display: grid;
+  width: min(920px, 100%);
+  min-height: 132px;
+  margin: 0 auto;
+  padding: 20px 24px 18px 26px;
+  transform: none;
+  border-color: #c9d9dc;
+  border-left: 6px solid var(--brand);
+  background: #ffffff;
+  box-shadow: 0 9px 24px rgba(29, 48, 52, 0.09);
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-card h2 {
+  color: var(--ink);
+  font-size: 1.65rem;
+}
+
+.patient-panel:not(.is-chat-open) .patient-instruction {
+  color: #294548;
+  font-size: 1.12rem;
+  font-weight: 750;
+}
+
+.patient-panel:not(.is-chat-open) .patient-task-meta {
+  color: var(--muted);
+}
+
+.patient-panel:not(.is-chat-open) .patient-actions {
+  position: static;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: min(920px, 100%);
+  margin: 0 auto;
+  padding: 0;
+  transform: none;
+}
+
+.patient-panel:not(.is-chat-open) .patient-action {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 12px 18px;
+  border: 2px solid #c6d5d8;
+  background: #ffffff;
+  color: var(--brand-dark);
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1.2;
+  box-shadow: 0 5px 14px rgba(29, 48, 52, 0.06);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action svg {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.patient-panel:not(.is-chat-open) .patient-action:hover {
+  transform: none;
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: 0 7px 18px rgba(29, 48, 52, 0.09);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.primary-action {
+  grid-column: 1 / -1;
+  min-height: 82px;
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #ffffff;
+  font-size: 1.65rem;
+  box-shadow: 0 11px 24px rgba(15, 85, 92, 0.2);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.primary-action:hover {
+  border-color: var(--brand-dark);
+  background: var(--brand-dark);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.issue-action {
+  border-color: #e1aaa5;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.issue-action:hover {
+  border-color: var(--danger);
+  background: #ffe5e2;
+}
+
+.patient-panel:not(.is-chat-open) .patient-action.communication-action {
+  border-color: #cfd9dc;
+  background: #f6f8f8;
+}
+
+.patient-panel.is-chat-open .patient-chat-area,
+.patient-panel.is-chat-open .patient-caregiver-chat-area {
+  border-top: 0;
+  background: #ffffff;
+}
+
+.patient-chat-header {
+  min-height: 54px;
+  padding: 8px 16px;
+  background: #f8fafa;
+}
+
+.patient-chat-header h3,
+.caregiver-chat > h3,
+.caregiver-patient-chat > h3 {
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.messages,
+.caregiver-chat-messages,
+.direct-chat-messages {
+  background: #f7f9f9;
+}
+
+.composer,
+.caregiver-composer {
+  border-top-color: var(--line);
+  background: #ffffff;
+}
+
+.composer textarea,
+.caregiver-composer textarea {
+  background: #ffffff;
+}
+
+.caregiver-panel {
+  background: #f4f7f7;
+}
+
+.caregiver-header {
+  min-height: 76px;
+  padding: 14px 20px;
+}
+
+.caregiver-header h2 {
+  color: var(--ink);
+  font-size: 1.3rem;
+}
+
+.clear-caregiver-button {
+  border-color: #e3c3bf;
+  color: var(--danger);
+}
+
+.clear-caregiver-button:hover {
+  border-color: #d99d97;
+  background: var(--danger-soft);
+}
+
+.caregiver-home.caregiver-section-panel.is-active {
+  gap: 16px;
+  padding: 18px 20px 20px;
+}
+
+.caregiver-home-overview {
+  grid-template-columns: minmax(0, 1.35fr) minmax(330px, 0.8fr);
+  gap: 22px;
+  padding: 0 0 16px;
+}
+
+.caregiver-home-summary h3 {
+  color: var(--ink);
+  font-size: 1.25rem;
+}
+
+.caregiver-home-summary > p:last-child {
+  color: #506367;
+  line-height: 1.45;
+}
+
+.home-kpi {
+  min-height: 76px;
+  padding: 12px 13px;
+  background: #ffffff;
+}
+
+.home-kpi strong {
+  color: var(--brand-dark);
+  font-size: 1.55rem;
+}
+
+.home-kpi span {
+  color: var(--muted);
+}
+
+.caregiver-home-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.caregiver-home-card {
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 12px;
+  min-height: 80px;
+  padding: 13px 14px;
+  border-left: 4px solid var(--card-accent);
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(29, 48, 52, 0.05);
+}
+
+.caregiver-home-card::after {
+  color: #809094;
+  font-size: 1.35rem;
+  font-weight: 500;
+  content: "›";
+}
+
+.caregiver-home-card:hover {
+  transform: none;
+  border-color: var(--card-accent);
+  background: #fbfcfc;
+  box-shadow: 0 8px 18px rgba(29, 48, 52, 0.09);
+}
+
+.home-card-icon {
+  width: 44px;
+  height: 44px;
+}
+
+.home-card-icon svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.home-card-copy strong,
+.home-card-copy > span {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.home-card-copy strong {
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.home-card-copy > span {
+  color: var(--muted);
+  line-height: 1.25;
+}
+
+.caregiver-section-toolbar {
+  min-height: 52px;
+  border-bottom-color: var(--line);
+}
+
+.caregiver-home-button {
+  background: #ffffff;
+}
+
+.caregiver-panel > .caregiver-section-panel:not(.caregiver-home).is-active {
+  scrollbar-gutter: stable;
+}
+
+.notification-setting-block,
+.routine-manager,
+.insight-panel,
+.caregiver-update,
+.recent-events,
+.dataset-panel,
+.clock-schedule-panel {
+  border-color: var(--line);
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(29, 48, 52, 0.05);
+}
+
+.caregiver-aura-launcher {
+  width: 58px;
+  height: 58px;
+  border-color: var(--brand-dark);
+  background: var(--brand);
+  box-shadow: 0 11px 24px rgba(15, 85, 92, 0.25);
+}
+
+.caregiver-aura-launcher:hover {
+  background: var(--brand-dark);
+}
+
+@media (max-height: 760px) and (min-width: 761px) {
+  .patient-panel:not(.is-chat-open) .patient-focus {
+    align-content: start;
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-task-card {
+    min-height: 108px;
+    padding-top: 14px;
+    padding-bottom: 13px;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action {
+    min-height: 58px;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action.primary-action {
+    min-height: 70px;
+  }
+}
+
+@media (max-width: 900px) {
+  .caregiver-home-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .caregiver-home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 8px;
+  }
+
+  .top-bar {
+    flex-direction: row;
+    align-items: center;
+    padding: 7px 8px 7px 12px;
+  }
+
+  .account-bar {
+    width: auto;
+    margin-left: auto;
+  }
+
+  .account-bar > span {
+    display: none;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-focus {
+    display: grid;
+    grid-template-rows: auto auto;
+    align-content: start;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-task-card {
+    width: 100%;
+    min-height: 116px;
+    margin: 0;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin: 0;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action,
+  .patient-panel:not(.is-chat-open) .patient-action.primary-action {
+    min-height: 66px;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action {
+    padding: 10px 12px;
+    font-size: 1rem;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action.primary-action {
+    grid-column: 1 / -1;
+    font-size: 1.4rem;
+  }
+
+  .caregiver-header {
+    min-height: 0;
+  }
+
+  .caregiver-home.caregiver-section-panel.is-active {
+    padding: 14px;
+  }
+
+  .caregiver-home-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 20px 16px;
+  }
+
+  .app-header .header-actions .ghost-button {
+    display: none;
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .patient-panel:not(.is-chat-open) .patient-action.primary-action {
+    grid-column: auto;
+  }
+
+  .caregiver-header {
+    align-items: stretch;
+  }
+
+  .caregiver-header .header-actions {
+    width: 100%;
+  }
+
+  .caregiver-header .header-actions > button {
+    flex: 1 1 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Welcome experience */
+.welcome-view {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  min-height: 100dvh;
+  overflow: hidden;
+  background-color: #142f33;
+  background-image: url("assets/welcome-hero.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.welcome-view::before {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 27, 31, 0.2);
+  content: "";
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(1320px, 100%);
+  min-height: 100%;
+  align-items: center;
+  margin: 0 auto;
+  padding: 56px;
+}
+
+.welcome-copy {
+  display: grid;
+  width: min(590px, 54%);
+  gap: 22px;
+  padding-left: 24px;
+  border-left: 5px solid #e8754c;
+  color: #ffffff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-kicker {
+  margin: 0;
+  color: #ffab8d;
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.welcome-copy h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.welcome-statement {
+  max-width: 570px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 1.32rem;
+  font-weight: 650;
+  line-height: 1.55;
+  text-wrap: balance;
+}
+
+.welcome-start-button {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 54px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 0 20px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #123f45;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-start-button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  transition: transform 150ms ease;
+}
+
+.welcome-start-button:hover {
+  border-color: #e8754c;
+  background: #e8754c;
+  color: #ffffff;
+}
+
+.welcome-start-button:hover svg {
+  transform: translateX(3px);
+}
+
+.auth-welcome-button {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand-dark);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.auth-welcome-button:hover {
+  color: var(--brand);
+}
+
+.auth-welcome-button span {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 760px) {
+  .welcome-view {
+    background-position: 64% center;
+  }
+
+  .welcome-view::before {
+    background: rgba(7, 27, 31, 0.58);
+  }
+
+  .welcome-content {
+    align-items: end;
+    padding: 32px 24px 48px;
+  }
+
+  .welcome-copy {
+    width: min(560px, 100%);
+    gap: 18px;
+    padding-left: 18px;
+  }
+
+  .welcome-copy h1 {
+    font-size: 3.7rem;
+  }
+
+  .welcome-statement {
+    font-size: 1.08rem;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 420px) {
+  .welcome-content {
+    padding: 24px 18px 34px;
+  }
+
+  .welcome-copy h1 {
+    font-size: 3.2rem;
+  }
+
+  .welcome-start-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
