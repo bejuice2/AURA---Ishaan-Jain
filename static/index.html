@@ -16,6 +16,9 @@
             <p class="welcome-statement">
               Memories are the core foundation of human survival, identity, and social connection, and we save that memory.
             </p>
+            <p class="demo-disclaimer" data-demo-disclaimer hidden>
+              Public prototype. Use synthetic information only. Do not enter real patient, phone, or medical data. AURA does not replace emergency services.
+            </p>
             <button class="welcome-start-button" id="welcomeStartButton" type="button">
               <span>Get Started</span>
               <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -37,6 +40,10 @@
             <p class="eyebrow">AURA</p>
             <h1>Sign In</h1>
           </div>
+
+          <p class="demo-disclaimer" data-demo-disclaimer hidden>
+            Public prototype. Use synthetic information only. Do not enter real patient, phone, or medical data. AURA does not replace emergency services.
+          </p>
 
           <div class="auth-tabs" role="tablist" aria-label="Sign in options">
             <button class="auth-tab is-active" id="showLoginButton" type="button">Log In</button>
@@ -73,8 +80,9 @@
             <input id="loginPassword" type="password" autocomplete="current-password" required>
             <label for="loginCaregiverPassword">Caregiver password</label>
             <input id="loginCaregiverPassword" type="password" autocomplete="current-password" required>
-            <label for="loginCaregiverPhone">Caregiver phone (optional)</label>
+            <label class="demo-phone-field" for="loginCaregiverPhone">Caregiver phone (optional)</label>
             <input
+              class="demo-phone-field"
               id="loginCaregiverPhone"
               type="tel"
               autocomplete="tel"
@@ -95,8 +103,9 @@
             <input id="signupPassword" type="password" autocomplete="new-password" required>
             <label for="signupCaregiverPassword">Caregiver password</label>
             <input id="signupCaregiverPassword" type="password" autocomplete="new-password" required>
-            <label for="signupCaregiverPhone">Caregiver phone (optional)</label>
+            <label class="demo-phone-field" for="signupCaregiverPhone">Caregiver phone (optional)</label>
             <input
+              class="demo-phone-field"
               id="signupCaregiverPhone"
               type="tel"
               autocomplete="tel"
@@ -298,9 +307,24 @@
             <p class="interface-greeting" id="caregiverGreeting">Hi</p>
           </div>
           <div class="header-actions">
+            <button
+              class="icon-button caregiver-notification-button"
+              id="caregiverNotificationButton"
+              type="button"
+              data-caregiver-section="alerts"
+              aria-label="Open caregiver alerts"
+              title="Caregiver alerts"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M10 21h4"></path>
+              </svg>
+              <span class="notification-count-badge" id="caregiverNotificationBadge" hidden>0</span>
+            </button>
             <button class="ghost-button clear-caregiver-button" id="resetCaregiverButton" type="button">
               Clear Alerts &amp; Chat
             </button>
+            <span class="caregiver-action-status" id="caregiverResetStatus" role="status"></span>
             <button class="ghost-button" id="refreshCaregiverButton" type="button">
               Refresh
             </button>
@@ -351,6 +375,7 @@
                 <strong>Patient Chat</strong>
                 <span id="homePatientChatStatus">No messages</span>
               </span>
+              <span class="notification-count-badge home-card-badge" id="caregiverChatNotificationBadge" hidden>0</span>
             </button>
             <button class="caregiver-home-card card-alerts" type="button" data-caregiver-section="alerts">
               <span class="home-card-icon" aria-hidden="true">
@@ -508,6 +533,7 @@
               <textarea id="routineInstructions" rows="3" placeholder="One step per line" required></textarea>
               <button class="primary-button" type="submit">Save Routine</button>
             </form>
+            <p class="routine-form-status" id="routineFormStatus" role="status"></p>
             <div class="routine-list" id="routineList"></div>
           </section>
         </div>

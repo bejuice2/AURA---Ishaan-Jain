@@ -14,16 +14,14 @@ load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")
 
-if not api_key:
-    raise ValueError(
-        "OPENAI_API_KEY was not found. "
-        "Make sure your .env file is in the same folder as main.py."
+client = (
+    OpenAI(
+        api_key=api_key,
+        timeout=float(os.getenv("AURA_OPENAI_TIMEOUT", "30")),
+        max_retries=int(os.getenv("AURA_OPENAI_RETRIES", "5")),
     )
-
-client = OpenAI(
-    api_key=api_key,
-    timeout=float(os.getenv("AURA_OPENAI_TIMEOUT", "30")),
-    max_retries=int(os.getenv("AURA_OPENAI_RETRIES", "5")),
+    if api_key
+    else None
 )
 AURA_CAREGIVER_MODEL = os.getenv("AURA_CAREGIVER_MODEL", os.getenv("AURA_MODEL", "gpt-5-mini"))
 AURA_PATIENT_MODEL = os.getenv("AURA_PATIENT_MODEL", "gpt-5-mini")
@@ -193,6 +191,8 @@ def get_AURA_response(
     Send a message to AURA, run requested tools,
     and return the final answer, response ID, and tools used.
     """
+    if client is None:
+        raise RuntimeError("OPENAI_API_KEY is not configured.")
 
     request = {
         "model": AURA_PATIENT_MODEL,
@@ -261,6 +261,9 @@ def get_AURA_response(
 # --------------------------------------------------
 
 def main() -> None:
+    if client is None:
+        print("AURA cannot start chat because OPENAI_API_KEY is not configured.")
+        return
     previous_response_id = None
 
     print("=" * 60)

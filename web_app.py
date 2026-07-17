@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 
 import database
 import insights
+import runtime_config
 from language_utils import (
     get_supported_languages,
     localize_patient_text,
@@ -30,8 +31,8 @@ from main import AURA_CAREGIVER_MODEL, AURA_PATIENT_MODEL, client
 from scoring import score_attempt
 
 
-HOST = "127.0.0.1"
-PORT = 8000
+HOST = runtime_config.HOST
+PORT = runtime_config.PORT
 STATIC_DIR = Path(__file__).with_name("static")
 USER_ID = database.DEFAULT_USER_ID
 AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 30
@@ -50,6 +51,9 @@ MISSED_TASK_MONITOR_SECONDS = 2
 session_lock = Lock()
 overdue_lock = Lock()
 sessions: dict[str, dict] = {}
+runtime_lock = Lock()
+runtime_started = False
+runtime_monitor_stop: Event | None = None
 
 
 CAREGIVER_CHAT_PROMPT = """
@@ -225,6 +229,8 @@ def should_try_next_model(error: Exception) -> bool:
 
 
 def create_ai_response(role: str, primary_model: str, **request):
+    if client is None:
+        raise RuntimeError("OPENAI_API_KEY is not configured.")
     last_error = None
     for model in ordered_model_choices(primary_model, role):
         try:
@@ -250,6 +256,10 @@ def ai_service_error_message(error: Exception, audience: str = "patient") -> str
             "AURA chat is temporarily unavailable. "
             "Please ask your caregiver to check the AI service."
         )
+    if "openai_api_key is not configured" in error_text:
+        if audience == "caregiver":
+            return "AURA chat is unavailable because the AI service is not configured."
+        return "AURA chat is not available right now. Please ask your caregiver for help."
     if any(
         term in error_text
         for term in ("connection error", "getaddrinfo", "dns", "timed out", "timeout")
@@ -341,15 +351,16 @@ def account_from_request(cookie_header: str | None, session: dict) -> dict | Non
 
 def create_auth_cookie(account: dict) -> str:
     token = secrets.token_urlsafe(32)
-    expires_at = (datetime.now().astimezone() + timedelta(seconds=AUTH_COOKIE_MAX_AGE))
+    expires_at = runtime_config.local_now() + timedelta(seconds=AUTH_COOKIE_MAX_AGE)
     database.save_auth_token(
         account["username"],
         token,
         expires_at.isoformat(timespec="seconds"),
     )
+    secure = "; Secure" if runtime_config.SECURE_COOKIES else ""
     return (
         f"aura_auth={token}; Path=/; Max-Age={AUTH_COOKIE_MAX_AGE}; "
-        "SameSite=Lax; HttpOnly"
+        f"SameSite=Lax; HttpOnly{secure}"
     )
 
 
@@ -357,7 +368,8 @@ def clear_auth_cookie(cookie_header: str | None) -> str:
     auth_token = get_cookie_value(cookie_header, "aura_auth")
     if auth_token:
         database.delete_auth_token(auth_token)
-    return "aura_auth=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly"
+    secure = "; Secure" if runtime_config.SECURE_COOKIES else ""
+    return f"aura_auth=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly{secure}"
 
 
 def route_path(raw_path: str) -> str:
@@ -672,7 +684,7 @@ def ai_safety_assessment(message: str, task: dict | None = None) -> dict:
     except Exception as error:
         return {
             "level": "classifier_unavailable",
-            "reason": f"Safety classifier unavailable: {error}",
+            "reason": "Safety classifier is temporarily unavailable.",
         }
 
     parsed = extract_json_object(response.output_text)
@@ -740,6 +752,8 @@ def safety_alert_from_message(message: str, task: dict | None = None) -> dict | 
 
 
 def normalize_phone_number(value: object) -> str:
+    if runtime_config.PUBLIC_DEMO:
+        return ""
     raw_phone = str(value or "").strip()
     if not raw_phone:
         return ""
@@ -755,6 +769,8 @@ def normalize_phone_number(value: object) -> str:
 
 
 def text_service_is_configured() -> bool:
+    if runtime_config.PUBLIC_DEMO:
+        return False
     return all(
         os.getenv(name)
         for name in (
@@ -828,7 +844,8 @@ def send_text_alert(alert: dict, user_id: str) -> str:
                 return "Text sent"
             return f"Text failed with status {response.status}"
     except Exception as error:
-        return f"Text failed: {error}"
+        print(f"AURA SMS delivery error: {type(error).__name__}")
+        return "Text failed"
 
 
 def deliver_text_alert(saved_alert: dict, user_id: str) -> None:
@@ -973,7 +990,7 @@ def monitor_missed_tasks(stop_event: Event) -> None:
             for account in database.list_accounts():
                 mark_overdue_tasks(account["username"])
         except Exception as error:
-            print(f"AURA missed-task monitor error: {type(error).__name__}: {error}")
+            print(f"AURA missed-task monitor error: {type(error).__name__}")
         stop_event.wait(MISSED_TASK_MONITOR_SECONDS)
 
 
@@ -1410,7 +1427,7 @@ def patient_safety_response(
             suggested_answer=suggested_answer,
         )
     except Exception as error:
-        print(f"AURA patient safety response error: {type(error).__name__}: {error}")
+        print(f"AURA patient safety response error: {type(error).__name__}")
         if saved_alert.get("severity") == "Emergency":
             answer = "I alerted your caregiver. Call 911 now and follow the dispatcher's instructions."
         else:
@@ -1678,7 +1695,7 @@ def dataset_payload(user_id: str) -> dict:
         "summary": database.dataset_summary(user_id),
         "records": records,
         "columns": database.EXCEL_DATASET_HEADERS,
-        "databasePath": str(database.DB_PATH),
+        "databasePath": database.DB_PATH.name,
     }
 
 
@@ -1913,11 +1930,12 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         if session_id:
+            secure = "; Secure" if runtime_config.SECURE_COOKIES else ""
             self.send_header(
                 "Set-Cookie",
                 (
                     f"aura_session={session_id}; Path=/; "
-                    f"Max-Age={AUTH_COOKIE_MAX_AGE}; SameSite=Lax; HttpOnly"
+                    f"Max-Age={AUTH_COOKIE_MAX_AGE}; SameSite=Lax; HttpOnly{secure}"
                 ),
             )
         for cookie_header in extra_cookies or []:
@@ -1934,6 +1952,12 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
 
     def require_caregiver(self, session_id: str) -> bool:
         state = get_session_state(session_id)
+        account = account_from_request(self.headers.get("Cookie"), state)
+        if account is not None:
+            state["active_role"] = "caregiver"
+            state["caregiver_authenticated"] = True
+            state["dataset_authenticated"] = True
+            return True
         if (
             state.get("active_role") == "caregiver"
             and state.get("caregiver_authenticated")
@@ -1948,17 +1972,9 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
 
     def require_dataset_access(self, session_id: str) -> bool:
         state = get_session_state(session_id)
-        if (
-            state.get("active_role") == "caregiver"
-            and state.get("caregiver_authenticated")
-            and state.get("dataset_authenticated")
-        ):
+        if self.require_caregiver(session_id):
+            state["dataset_authenticated"] = True
             return True
-        self.send_json(
-            403,
-            {"error": "Please sign in through the caregiver interface."},
-            session_id=session_id,
-        )
         return False
 
     def require_admin(self, session_id: str) -> bool:
@@ -1988,6 +2004,27 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
         path = route_path(self.path)
         session_id = get_cookie_session(self.headers.get("Cookie"))
         session = get_session_state(session_id)
+
+        if path == "/health":
+            try:
+                with database.connect() as connection:
+                    connection.execute("SELECT 1").fetchone()
+            except Exception:
+                self.send_json(503, {"status": "unhealthy", "database": "unavailable"})
+                return
+            self.send_json(200, {"status": "ok", "database": "available"})
+            return
+
+        if path == "/api/runtime-config":
+            self.send_json(
+                200,
+                {
+                    "publicDemo": runtime_config.PUBLIC_DEMO,
+                    "smsAvailable": text_service_is_configured(),
+                },
+                session_id=session_id,
+            )
+            return
 
         if path == "/api/auth-state":
             account = account_from_request(self.headers.get("Cookie"), session)
@@ -2077,6 +2114,10 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
             user_id = session_user_id(session)
             mark_overdue_tasks(user_id)
             alerts = database.list_alerts(limit=20, user_id=user_id)
+            patient_messages = database.list_patient_caregiver_messages(
+                limit=80,
+                user_id=user_id,
+            )
             latest_alert_id = max(
                 (int(alert.get("alert_id") or 0) for alert in alerts),
                 default=0,
@@ -2086,6 +2127,7 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
                 {
                     "alerts": alerts,
                     "latestAlertId": latest_alert_id,
+                    "patientMessages": patient_messages,
                 },
                 session_id=session_id,
             )
@@ -2123,8 +2165,7 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
                 return
             if not self.require_caregiver(session_id):
                 return
-            export_path = database.export_attempts_csv(user_id=session_user_id(session))
-            content = export_path.read_bytes()
+            content = database.export_attempts_csv_bytes(user_id=session_user_id(session))
             self.send_response(200)
             self.send_header("Content-Type", "text/csv; charset=utf-8")
             self.send_header(
@@ -2148,8 +2189,7 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
                     session_id=session_id,
                 )
                 return
-            export_path = database.export_attempts_csv(user_id=selected_user_id)
-            content = export_path.read_bytes()
+            content = database.export_attempts_csv_bytes(user_id=selected_user_id)
             safe_name = re.sub(r"[^a-zA-Z0-9_-]+", "-", selected_user_id).strip("-")
             self.send_response(200)
             self.send_header("Content-Type", "text/csv; charset=utf-8")
@@ -2480,7 +2520,15 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
             if not self.require_caregiver(session_id):
                 return
             user_id = session_user_id(session)
-            routine = database.save_routine(self.read_json_body(), user_id=user_id)
+            try:
+                routine = database.save_routine(self.read_json_body(), user_id=user_id)
+            except ValueError as error:
+                self.send_json(
+                    400,
+                    {"error": str(error)},
+                    session_id=session_id,
+                )
+                return
             self.send_json(
                 200,
                 {
@@ -2536,7 +2584,7 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
                 answer = caregiver_answer(question, target_language, user_id)
             except Exception as error:
                 answer = ai_service_error_message(error, audience="caregiver")
-                print(f"AURA caregiver AI error: {type(error).__name__}: {error}")
+                print(f"AURA caregiver AI error: {type(error).__name__}")
                 database.add_caregiver_chat("assistant", answer, user_id=user_id)
                 self.send_json(
                     503,
@@ -2565,6 +2613,10 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
                 {
                     "ok": True,
                     "dashboard": dashboard_payload(user_id),
+                    "patientMessages": database.list_patient_caregiver_messages(
+                        limit=80,
+                        user_id=user_id,
+                    ),
                 },
                 session_id=session_id,
             )
@@ -2670,7 +2722,7 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
                 result = patient_response(session, user_message, target_language, user_id)
             except Exception as error:
                 answer = ai_service_error_message(error, audience="patient")
-                print(f"AURA patient AI error: {type(error).__name__}: {error}")
+                print(f"AURA patient AI error: {type(error).__name__}")
                 self.send_json(
                     503,
                     {"error": answer},
@@ -2705,23 +2757,33 @@ class AuraWebHandler(SimpleHTTPRequestHandler):
         self.send_json(404, {"error": "Unknown endpoint."}, session_id=session_id)
 
 
+def initialize_application() -> None:
+    global runtime_started, runtime_monitor_stop
+    with runtime_lock:
+        if runtime_started:
+            return
+        database.init_db()
+        runtime_monitor_stop = Event()
+        monitor_thread = Thread(
+            target=monitor_missed_tasks,
+            args=(runtime_monitor_stop,),
+            name="aura-missed-task-monitor",
+            daemon=True,
+        )
+        monitor_thread.start()
+        runtime_started = True
+
+
 def run() -> None:
-    database.init_db()
-    monitor_stop = Event()
-    monitor_thread = Thread(
-        target=monitor_missed_tasks,
-        args=(monitor_stop,),
-        name="aura-missed-task-monitor",
-        daemon=True,
-    )
-    monitor_thread.start()
+    initialize_application()
     server = ThreadingHTTPServer((HOST, PORT), AuraWebHandler)
     print(f"AURA web app running at http://{HOST}:{PORT}")
     print(f"SQLite database: {database.DB_PATH}")
     try:
         server.serve_forever()
     finally:
-        monitor_stop.set()
+        if runtime_monitor_stop is not None:
+            runtime_monitor_stop.set()
         server.server_close()
 
 

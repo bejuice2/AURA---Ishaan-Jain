@@ -1,6 +1,8 @@
 const messages = document.querySelector("#messages");
 const welcomeView = document.querySelector("#welcomeView");
 const welcomeStartButton = document.querySelector("#welcomeStartButton");
+const demoDisclaimers = document.querySelectorAll("[data-demo-disclaimer]");
+const demoPhoneFields = document.querySelectorAll(".demo-phone-field");
 const authWelcomeButton = document.querySelector("#authWelcomeButton");
 const chatForm = document.querySelector("#chatForm");
 const messageInput = document.querySelector("#messageInput");
@@ -35,6 +37,8 @@ const caregiverLiveAlertTitle = document.querySelector("#caregiverLiveAlertTitle
 const caregiverLiveAlertMessage = document.querySelector("#caregiverLiveAlertMessage");
 const caregiverLiveAlertView = document.querySelector("#caregiverLiveAlertView");
 const caregiverLiveAlertDismiss = document.querySelector("#caregiverLiveAlertDismiss");
+const caregiverNotificationButton = document.querySelector("#caregiverNotificationButton");
+const caregiverNotificationBadge = document.querySelector("#caregiverNotificationBadge");
 const patientGreeting = document.querySelector("#patientGreeting");
 const caregiverGreeting = document.querySelector("#caregiverGreeting");
 const caregiverSectionToolbar = document.querySelector("#caregiverSectionToolbar");
@@ -46,6 +50,7 @@ const homeCompletedStat = document.querySelector("#homeCompletedStat");
 const homeAlertStat = document.querySelector("#homeAlertStat");
 const homeHelpStat = document.querySelector("#homeHelpStat");
 const homePatientChatStatus = document.querySelector("#homePatientChatStatus");
+const caregiverChatNotificationBadge = document.querySelector("#caregiverChatNotificationBadge");
 const homeAlertStatus = document.querySelector("#homeAlertStatus");
 const homeScheduleStatus = document.querySelector("#homeScheduleStatus");
 const homePerformanceStatus = document.querySelector("#homePerformanceStatus");
@@ -93,6 +98,7 @@ const clockTaskList = document.querySelector("#clockTaskList");
 const languageSelect = document.querySelector("#languageSelect");
 const refreshCaregiverButton = document.querySelector("#refreshCaregiverButton");
 const resetCaregiverButton = document.querySelector("#resetCaregiverButton");
+const caregiverResetStatus = document.querySelector("#caregiverResetStatus");
 const clearDatasetButton = document.querySelector("#clearDatasetButton");
 const caregiverStatus = document.querySelector("#caregiverStatus");
 const caregiverUpdateText = document.querySelector("#caregiverUpdateText");
@@ -108,6 +114,7 @@ const caregiverPatientMessageInput = document.querySelector("#caregiverPatientMe
 const caregiverPatientSendButton = document.querySelector("#caregiverPatientSendButton");
 const caregiverPatientMessages = document.querySelector("#caregiverPatientMessages");
 const routineForm = document.querySelector("#routineForm");
+const routineFormStatus = document.querySelector("#routineFormStatus");
 const routineList = document.querySelector("#routineList");
 const routineCount = document.querySelector("#routineCount");
 const insightGrid = document.querySelector("#insightGrid");
@@ -214,6 +221,8 @@ let caregiverAlertNotificationsEnabled =
 let caregiverAlertBaselineReady = false;
 let caregiverAlertStorageKey = "";
 let lastCaregiverAlertId = 0;
+let caregiverChatReadStorageKey = "";
+let lastReadPatientMessageId = 0;
 let selectedLanguage = window.localStorage.getItem("auraLanguage") || "auto";
 let selectedRole = window.localStorage.getItem("auraRole") === "caregiver"
   ? "caregiver"
@@ -306,6 +315,10 @@ function setSignedIn(account, role = selectedRole) {
     lastCaregiverAlertId = Number(
       window.localStorage.getItem(caregiverAlertStorageKey) || 0,
     );
+    caregiverChatReadStorageKey = `auraLastReadPatientMessageId:${account?.username || "default"}`;
+    lastReadPatientMessageId = Number(
+      window.localStorage.getItem(caregiverChatReadStorageKey) || 0,
+    );
     checkCaregiverNotifications();
     caregiverAlertTimer = window.setInterval(checkCaregiverNotifications, 2000);
   }
@@ -344,6 +357,9 @@ function setSignedOut(message = "", showWelcomeScreen = false) {
   caregiverAlertBaselineReady = false;
   caregiverAlertStorageKey = "";
   lastCaregiverAlertId = 0;
+  caregiverChatReadStorageKey = "";
+  lastReadPatientMessageId = 0;
+  caregiverChatNotificationBadge.hidden = true;
   caregiverLiveAlert.hidden = true;
   lastNotifiedTaskKey = "";
   stopListening();
@@ -400,6 +416,26 @@ async function loadLanguages() {
     updateRecognitionLanguage();
   } catch {
     languageSelect.value = selectedLanguage;
+  }
+}
+
+async function loadRuntimeConfig() {
+  try {
+    const response = await fetch("/api/runtime-config");
+    const data = await response.json();
+    if (!response.ok) {
+      return;
+    }
+    const publicDemo = Boolean(data.publicDemo);
+    document.body.classList.toggle("public-demo", publicDemo);
+    demoDisclaimers.forEach((element) => {
+      element.hidden = !publicDemo;
+    });
+    demoPhoneFields.forEach((element) => {
+      element.hidden = publicDemo;
+    });
+  } catch (_error) {
+    // Local static-file previews do not have a runtime API.
   }
 }
 
@@ -998,6 +1034,7 @@ async function checkCaregiverNotifications() {
     const alerts = data.alerts || [];
     const latestAlertId = Number(data.latestAlertId || 0);
     renderAlerts(alerts);
+    renderPatientCaregiverChat(data.patientMessages || []);
 
     if (!caregiverAlertBaselineReady) {
       caregiverAlertBaselineReady = true;
@@ -1147,6 +1184,28 @@ function renderPatientCaregiverChat(chat = []) {
   homePatientChatStatus.textContent = chat.length
     ? `${chat.length} message${chat.length === 1 ? "" : "s"}`
     : "No messages";
+  if (selectedRole !== "caregiver") {
+    caregiverChatNotificationBadge.hidden = true;
+    return;
+  }
+  const patientMessages = chat.filter((message) => message.sender === "patient");
+  const latestPatientMessageId = Math.max(
+    0,
+    ...patientMessages.map((message) => Number(message.message_id || 0)),
+  );
+  const patientChatIsOpen = caregiverSectionPanels.patientChat?.classList.contains("is-active");
+  if (patientChatIsOpen && latestPatientMessageId > lastReadPatientMessageId) {
+    lastReadPatientMessageId = latestPatientMessageId;
+    window.localStorage.setItem(
+      caregiverChatReadStorageKey,
+      String(lastReadPatientMessageId),
+    );
+  }
+  const unreadCount = patientMessages.filter(
+    (message) => Number(message.message_id || 0) > lastReadPatientMessageId,
+  ).length;
+  caregiverChatNotificationBadge.textContent = unreadCount > 99 ? "99+" : String(unreadCount);
+  caregiverChatNotificationBadge.hidden = unreadCount === 0;
 }
 
 async function readApiJson(response) {
@@ -1185,6 +1244,15 @@ async function loadPatientCaregiverChat() {
 
 function renderAlerts(alerts = []) {
   alertList.innerHTML = "";
+  const alertCount = alerts.length;
+  caregiverNotificationBadge.textContent = alertCount > 99 ? "99+" : String(alertCount);
+  caregiverNotificationBadge.hidden = alertCount === 0;
+  caregiverNotificationButton.setAttribute(
+    "aria-label",
+    alertCount
+      ? `Open caregiver alerts, ${alertCount} notification${alertCount === 1 ? "" : "s"}`
+      : "Open caregiver alerts",
+  );
   homeAlertStat.textContent = alerts.length;
   homeAlertStatus.textContent = alerts.length
     ? `${alerts.length} alert${alerts.length === 1 ? "" : "s"}`
@@ -1791,15 +1859,24 @@ async function refreshCaregiverUpdate(showLoading = true) {
 
 async function resetCaregiverMessagesAndAlerts() {
   resetCaregiverButton.disabled = true;
+  caregiverResetStatus.textContent = "Clearing...";
   try {
     const response = await fetch("/api/caregiver-reset", { method: "POST" });
-    const data = await response.json();
+    const data = await readApiJson(response);
     if (!response.ok) {
       throw new Error(data.error || "Could not reset caregiver messages.");
     }
     renderDashboard(data.dashboard);
+    renderPatientCaregiverChat(data.patientMessages || []);
+    lastReadPatientMessageId = 0;
+    if (caregiverChatReadStorageKey) {
+      window.localStorage.setItem(caregiverChatReadStorageKey, "0");
+    }
+    caregiverChatNotificationBadge.hidden = true;
+    caregiverLiveAlert.hidden = true;
+    caregiverResetStatus.textContent = "Cleared";
   } catch (error) {
-    caregiverUpdateText.textContent = error.message;
+    caregiverResetStatus.textContent = error.message;
   } finally {
     resetCaregiverButton.disabled = false;
   }
@@ -1879,6 +1956,13 @@ async function sendMessage(message) {
     }
     if (data.clock) {
       renderClock(data.clock);
+    }
+    if (trimmedMessage.toLowerCase() === "help") {
+      patientInstructionText.textContent = data.answer;
+      patientTaskMeta.textContent = data.alert
+        ? "Your caregiver received an alert."
+        : "Your caregiver has been notified.";
+      updateStatus("Caregiver notified");
     }
     speak(data.answer);
   } catch (error) {
@@ -1963,6 +2047,9 @@ async function sendPatientCaregiverMessage(sender, input, button) {
 }
 
 async function saveRoutine() {
+  const submitButton = routineForm.querySelector('button[type="submit"]');
+  routineFormStatus.textContent = "Saving routine...";
+  submitButton.disabled = true;
   const instructions = document
     .querySelector("#routineInstructions")
     .value.split("\n")
@@ -1984,15 +2071,21 @@ async function saveRoutine() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const data = await response.json();
+  const data = await readApiJson(response);
   if (!response.ok) {
+    submitButton.disabled = false;
     throw new Error(data.error || "Could not save routine.");
   }
   renderRoutines(data.routines);
+  if (data.dashboard) {
+    renderDashboard(data.dashboard);
+  }
   routineForm.reset();
   document.querySelector("#routineTime").value = "09:00";
   document.querySelector("#routineDifficulty").value = "3";
   document.querySelector("#routineImportance").value = "3";
+  routineFormStatus.textContent = `Saved ${data.routine?.task_name || "routine"}.`;
+  submitButton.disabled = false;
 }
 
 function setupSpeechRecognition() {
@@ -2067,7 +2160,7 @@ async function startListening() {
     return;
   }
   if (window.location.protocol === "file:") {
-    updateStatus("Open 127.0.0.1 first");
+    updateStatus("Open AURA through its web server first");
     return;
   }
   window.clearTimeout(restartTimer);
@@ -2154,7 +2247,8 @@ routineForm.addEventListener("submit", async (event) => {
   try {
     await saveRoutine();
   } catch (error) {
-    caregiverUpdateText.textContent = error.message;
+    routineFormStatus.textContent = error.message;
+    routineForm.querySelector('button[type="submit"]').disabled = false;
   }
 });
 
@@ -2517,6 +2611,7 @@ cancelPasswordButton.addEventListener("click", hidePasswordModal);
 setupSpeechRecognition();
 updateVoiceButtons();
 setAuthRole(selectedRole);
+loadRuntimeConfig();
 loadLanguages();
 loadAuthState();
 

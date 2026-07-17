@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: aura
+    runtime: python
+    plan: starter
+    region: ohio
+    numInstances: 1
+    buildCommand: pip install -r requirements.txt
+    startCommand: python serve.py
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.11
+      - key: AURA_ENV
+        value: production
+      - key: AURA_DATA_DIR
+        value: /var/data
+      - key: AURA_TIMEZONE
+        value: America/New_York
+      - key: AURA_PUBLIC_DEMO
+        value: "true"
+      - key: AURA_CAREGIVER_MODEL
+        value: gpt-5-mini
+      - key: AURA_PATIENT_MODEL
+        value: gpt-5-mini
+      - key: AURA_OPENAI_TIMEOUT
+        value: "30"
+      - key: AURA_OPENAI_RETRIES
+        value: "5"
+      - key: AURA_TASK_GRACE_PERIOD_MINUTES
+        value: "30"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: AURA_ADMIN_USERNAME
+        sync: false
+      - key: AURA_ADMIN_PASSWORD
+        sync: false
+    disk:
+      name: aura-data
+      mountPath: /var/data
+      sizeGB: 1

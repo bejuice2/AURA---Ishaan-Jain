@@ -3,16 +3,18 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from threading import Lock
 
+import runtime_config
+
 
 _lock = Lock()
-_real_anchor = datetime.now().astimezone()
+_real_anchor = runtime_config.local_now()
 _sim_anchor = _real_anchor
 _speed = 1.0
 
 
 def now() -> datetime:
     with _lock:
-        real_elapsed = datetime.now().astimezone() - _real_anchor
+        real_elapsed = runtime_config.local_now() - _real_anchor
         simulated_elapsed = real_elapsed.total_seconds() * _speed
         return _sim_anchor + timedelta(seconds=simulated_elapsed)
 
@@ -35,7 +37,7 @@ def set_speed(speed: float) -> dict:
     current = now()
     with _lock:
         _sim_anchor = current
-        _real_anchor = datetime.now().astimezone()
+        _real_anchor = runtime_config.local_now()
         _speed = safe_speed
     return state()
 
@@ -43,7 +45,7 @@ def set_speed(speed: float) -> dict:
 def reset() -> dict:
     global _real_anchor, _sim_anchor, _speed
     with _lock:
-        _real_anchor = datetime.now().astimezone()
+        _real_anchor = runtime_config.local_now()
         _sim_anchor = _real_anchor
         _speed = 1.0
     return state()

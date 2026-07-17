@@ -3,7 +3,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import hmac
+import io
 import json
+import re
 import secrets
 import sqlite3
 from datetime import datetime
@@ -11,11 +13,12 @@ from pathlib import Path
 from typing import Any
 
 import test_clock
+import runtime_config
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "aura.sqlite3"
-EXPORT_PATH = BASE_DIR / "aura_task_attempts.csv"
+DB_PATH = runtime_config.DATA_DIR / "aura.sqlite3"
+EXPORT_PATH = runtime_config.DATA_DIR / "aura_task_attempts.csv"
 DEFAULT_USER_ID = "patient-1"
 PASSWORD_ITERATIONS = 120_000
 
@@ -191,9 +194,11 @@ DEFAULT_ROUTINES = [
 
 
 def connect() -> sqlite3.Connection:
+    runtime_config.ensure_data_directory()
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA busy_timeout = 3000")
+    connection.execute("PRAGMA foreign_keys = ON")
     return connection
 
 
@@ -747,7 +752,7 @@ def save_auth_token(username: str, token: str, expires_at: str) -> None:
 
 
 def account_from_auth_token(token: str) -> dict | None:
-    now = datetime.now().astimezone().isoformat(timespec="seconds")
+    now = runtime_config.local_now().isoformat(timespec="seconds")
     with connect() as db:
         row = db.execute(
             """
@@ -772,23 +777,58 @@ def save_routine(
     user_id: str = DEFAULT_USER_ID,
     db: sqlite3.Connection | None = None,
 ) -> dict:
-    close_db = db is None
-    db = db or connect()
-    now = today_context()["timestamp"]
-    task_id = data.get("task_id") or data["task_name"].lower().replace(" ", "-")
+    task_name = str(data.get("task_name", "")).strip()
+    task_category = str(data.get("task_category", "Routine")).strip()
+    scheduled_time = str(data.get("scheduled_time", "")).strip()
+    time_of_day = str(data.get("time_of_day", "Morning")).strip()
     instructions = data.get("instructions") or []
     if isinstance(instructions, str):
         instructions = [line.strip() for line in instructions.splitlines() if line.strip()]
+    else:
+        instructions = [str(line).strip() for line in instructions if str(line).strip()]
+
+    if not task_name:
+        raise ValueError("Enter a task name.")
+    if len(task_name) > 100:
+        raise ValueError("Task name must be 100 characters or fewer.")
+    if not task_category:
+        raise ValueError("Enter a task category.")
+    try:
+        datetime.strptime(scheduled_time, "%H:%M")
+    except ValueError as error:
+        raise ValueError("Choose a valid scheduled time.") from error
+    if time_of_day not in {"Morning", "Afternoon", "Evening"}:
+        raise ValueError("Choose a valid time of day.")
+    if not instructions:
+        raise ValueError("Add at least one instruction step.")
+    if len(instructions) > 25:
+        raise ValueError("Use 25 instruction steps or fewer.")
+    try:
+        task_difficulty = int(data.get("task_difficulty", 3))
+        task_importance = int(data.get("task_importance", 3))
+    except (TypeError, ValueError) as error:
+        raise ValueError("Difficulty and importance must be numbers from 1 to 5.") from error
+    if task_difficulty not in range(1, 6) or task_importance not in range(1, 6):
+        raise ValueError("Difficulty and importance must be from 1 to 5.")
+
+    close_db = db is None
+    db = db or connect()
+    now = today_context()["timestamp"]
+    task_id = str(data.get("task_id") or "").strip()
+    if not task_id:
+        task_id = re.sub(r"[^a-z0-9]+", "-", task_name.lower()).strip("-")
+    if not task_id:
+        task_id = f"task-{secrets.token_hex(4)}"
 
     payload = {
         "user_id": user_id,
         "task_id": task_id,
-        "task_name": data["task_name"].strip(),
-        "task_category": data.get("task_category", "Routine").strip(),
-        "task_difficulty": int(data.get("task_difficulty", 3)),
-        "task_importance": int(data.get("task_importance", 3)),
-        "scheduled_time": data.get("scheduled_time", "09:00"),
-        "time_of_day": data.get("time_of_day", "Morning"),
+        "task_name": task_name,
+        "task_category": task_category,
+        "task_difficulty": task_difficulty,
+        "task_importance": task_importance,
+        "scheduled_time": scheduled_time,
+        "time_of_day": time_of_day,
         "repeat_schedule": data.get("repeat_schedule", "Daily"),
         "instructions": json.dumps(instructions),
         "active": 1 if data.get("active", True) else 0,
@@ -1320,6 +1360,10 @@ def list_patient_caregiver_messages(
 def clear_caregiver_messages_and_alerts(user_id: str = DEFAULT_USER_ID) -> None:
     with connect() as db:
         db.execute("DELETE FROM caregiver_chat WHERE user_id = ?", (user_id,))
+        db.execute(
+            "DELETE FROM patient_caregiver_messages WHERE user_id = ?",
+            (user_id,),
+        )
         db.execute("DELETE FROM alerts WHERE user_id = ?", (user_id,))
         db.commit()
 
@@ -1412,16 +1456,27 @@ def export_attempts_csv(
     path: Path = EXPORT_PATH,
     user_id: str = DEFAULT_USER_ID,
 ) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8-sig") as file:
+        write_attempts_csv(file, user_id)
+    return path
+
+
+def write_attempts_csv(file, user_id: str = DEFAULT_USER_ID) -> None:
     attempts = excel_dataset_rows(limit=100000, user_id=user_id)
     headers = EXCEL_DATASET_HEADERS
-    with path.open("w", newline="", encoding="utf-8-sig") as file:
-        writer = csv.DictWriter(file, fieldnames=headers)
-        writer.writeheader()
-        for attempt in attempts:
-            row = {header: attempt.get(header, "") for header in headers}
-            # Keep spreadsheet apps from converting narrow ISO date/time cells to #####.
-            for field in ("date", "scheduled_time"):
-                if row[field]:
-                    row[field] = f"\u200e{row[field]}"
-            writer.writerow(row)
-    return path
+    writer = csv.DictWriter(file, fieldnames=headers)
+    writer.writeheader()
+    for attempt in attempts:
+        row = {header: attempt.get(header, "") for header in headers}
+        # Keep spreadsheet apps from converting narrow ISO date/time cells to #####.
+        for field in ("date", "scheduled_time"):
+            if row[field]:
+                row[field] = f"\u200e{row[field]}"
+        writer.writerow(row)
+
+
+def export_attempts_csv_bytes(user_id: str = DEFAULT_USER_ID) -> bytes:
+    output = io.StringIO(newline="")
+    write_attempts_csv(output, user_id)
+    return output.getvalue().encode("utf-8-sig")

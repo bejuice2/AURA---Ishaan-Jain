@@ -5193,6 +5193,83 @@ textarea:disabled {
   text-wrap: balance;
 }
 
+.demo-disclaimer {
+  max-width: 590px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #f2b99f;
+  border-left: 4px solid #d4512a;
+  border-radius: 6px;
+  background: #fff5ef;
+  color: #6d2c1d;
+  font-size: 0.9rem;
+  font-weight: 750;
+  line-height: 1.45;
+  text-shadow: none;
+}
+
+.demo-disclaimer[hidden],
+.demo-phone-field[hidden] {
+  display: none !important;
+}
+
+.caregiver-notification-button {
+  position: relative;
+  overflow: visible;
+}
+
+.notification-count-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: grid;
+  min-width: 23px;
+  height: 23px;
+  place-items: center;
+  padding: 0 6px;
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  background: #d92d20;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 3px 8px rgba(99, 19, 12, 0.3);
+}
+
+.notification-count-badge[hidden] {
+  display: none;
+}
+
+.caregiver-action-status {
+  min-width: 0;
+  color: #49666a;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.card-patient-chat {
+  position: relative;
+  overflow: visible;
+}
+
+.home-card-badge {
+  top: 9px;
+  right: 9px;
+}
+
+.routine-form-status {
+  min-height: 22px;
+  margin: 6px 0 0;
+  color: #315b60;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.auth-card .demo-disclaimer {
+  font-size: 0.82rem;
+}
+
 .welcome-start-button {
   display: inline-flex;
   width: fit-content;

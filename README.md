@@ -1,224 +1,177 @@
-# AURA Local Web App
+# AURA
 
-AURA is a local AI-assisted daily routine helper for elderly patients and caregivers. It supports sign in, short patient conversations, persistent routine tracking, per-user patient datasets, caregiver insights, caregiver chat, alerts, and CSV export.
+AURA is an AI-assisted daily routine application for patients and caregivers. It
+provides patient task guidance, caregiver alerts, routine management, persistent
+per-account performance datasets, caregiver insights, direct chat, CSV export,
+and optional SMS notifications.
 
-AURA is not a medical device. It does not diagnose, treat, replace caregivers, replace clinicians, or replace emergency services.
+> AURA is a demonstration prototype, not a medical device. It does not diagnose,
+> treat, replace clinicians or caregivers, or replace emergency services. Use
+> synthetic data for public demonstrations. Do not use this deployment for real
+> patient information without an appropriate security, privacy, legal, and
+> compliance review.
 
-## Run It
+## Architecture
 
-Create a private `.env` from the safe template before starting AURA:
+- Frontend: plain HTML, CSS, and JavaScript in `static/`.
+- Backend: Python HTTP application adapted to Flask/WSGI for production.
+- Production server: Waitress.
+- AI: OpenAI API, called only from the backend.
+- Persistence: one SQLite database under `AURA_DATA_DIR`.
+- Hosting: one Render Python web service with one persistent disk.
+
+The frontend and backend are served from the same origin. No separate frontend
+host, CORS configuration, or managed database is required for this architecture.
+Keep the Render service at one instance while it uses SQLite.
+
+## Local Setup
+
+Requirements: Python 3.12 and an OpenAI API key.
 
 ```powershell
 Copy-Item .env.example .env
-```
-
-Replace every placeholder in `.env` with private local values. The admin username
-and password are configured with `AURA_ADMIN_USERNAME` and `AURA_ADMIN_PASSWORD`.
-The real `.env`, SQLite databases, exported datasets, and private-key files are
-excluded by the repository `.gitignore`.
-
-```powershell
-cd "C:\Users\ishaa\Downloads\AIF\AI AGENT"
 python -m pip install -r requirements.txt
 python web_app.py
 ```
 
-Open:
+Set private values in `.env`, then open `http://127.0.0.1:8000`.
 
-```text
-http://127.0.0.1:8000
-```
-
-To view all account datasets in a separate local app, run:
+The separate local administrator dataset viewer can be started with:
 
 ```powershell
 python dataset_viewer_app.py
 ```
 
-Open:
+It is available at `http://127.0.0.1:8001`. This viewer is local-only and is not
+the Render production entry point.
+
+## Production Commands
+
+Build:
 
 ```text
-http://127.0.0.1:8001
+pip install -r requirements.txt
 ```
 
-The dataset viewer reads directly from `aura.sqlite3`.
-
-The caregiver password is part of sign in. Enter it when you create the account or log in.
-Existing accounts that did not store a caregiver password are removed during startup migration.
-
-## Language Tool
-
-The top bar has a language selector. `Auto detect` replies in the language the user types. Choosing a specific language makes AURA reply in that language unless the user asks for another language.
-
-The language tool supports many common languages and also sets the browser speech recognition and spoken reply language when the browser supports those features.
-
-Patient chat uses rule-based task logic first. A patient-specific phrasing helper can then simplify and translate the approved response, but it does not choose tasks, change actions, or add medical guidance.
-
-## Test Clock
-
-The top of the app has a testing clock. It is for local testing only.
-
-- `Speed` changes how quickly AURA's schedule time moves.
-- `Custom` lets you type a custom speed amount and apply it with `Set Speed`.
-- `Paused` freezes the testing clock.
-- `Reset Time` returns AURA to the real current time at `1x`.
-
-The testing clock is used for schedule checks, missed-task detection, task dates, alerts, and completion timing.
-
-## Changed Files
-
-- `web_app.py`: local HTTP API, patient task flow, caregiver routes, dataset access, alerts, CSV export.
-- `dataset_viewer_app.py`: separate local app for viewing all account datasets from SQLite.
-- `language_utils.py`: supported languages, caregiver localization, and patient-safe phrasing helper.
-- `database.py`: SQLite schema, login accounts, per-user routines and datasets, persistence helpers, CSV export.
-- `scoring.py`: raw and adjusted performance scoring.
-- `insights.py`: dashboard analytics, trends, and automatic summaries.
-- `test_clock.py`: adjustable testing clock used by schedule and task timing logic.
-- `static/index.html`: sign in, patient/caregiver tab UI, routine form, dataset view, dashboard, alerts, export.
-- `static/app.js`: sign in, logout, patient chat, caregiver auth, dashboard rendering, routine saving/deleting, dataset viewing/clearing, testing clock controls, and language selection.
-- `static/styles.css`: sign in, tab layout, language selector, caregiver dashboard, dataset table, routine, insight, and testing clock styling.
-- `README.md`: documentation.
-
-## Database
-
-SQLite database:
+Start:
 
 ```text
-aura.sqlite3
+python serve.py
 ```
 
-Tables:
+`serve.py` validates production configuration, binds Waitress to `0.0.0.0`, and
+uses the hosting platform's `PORT` environment variable.
 
-- `routines`: per-user task schedule, difficulty, importance, steps, active status.
-- `task_attempts`: patient performance records for every task attempt.
-- `caregiver_notes`: caregiver notes for future extension.
-- `alerts`: caregiver alerts and text status.
-- `summaries`: generated summaries for future extension.
-- `caregiver_chat`: caregiver questions and AURA answers.
-- `accounts`: username, password hash, caregiver password hash, patient name, and caregiver name.
-- `auth_tokens`: saved-device login tokens.
+## Environment Variables
 
-Passwords are stored as salted PBKDF2 hashes. Saved device login uses an HTTP-only cookie and a SQLite token record.
+Required in production:
 
-Each account uses its username as the `user_id`, so task attempts, alerts, caregiver chat, summaries, caregiver notes, and routines are separated by logged-in user.
+| Name | Purpose |
+| --- | --- |
+| `OPENAI_API_KEY` | Private OpenAI API credential. |
+| `AURA_ADMIN_USERNAME` | Private AURA administrator username. |
+| `AURA_ADMIN_PASSWORD` | Strong private AURA administrator password. |
+| `AURA_ENV` | Set to `production` on Render. |
+| `AURA_DATA_DIR` | Set to the persistent disk path, `/var/data`. |
+| `AURA_TIMEZONE` | IANA timezone, such as `America/New_York`. |
 
-`task_attempts` stores:
+Production settings included by `render.yaml`:
 
-`user_id`, `date`, `day_of_week`, `time_of_day`, `scheduled_time`, `task_name`, `task_category`, `task_difficulty`, `task_importance`, `completed`, `reminders_needed`, `help_requested`, `confusion_flag`, `time_to_complete`, `raw_performance_score`, `adjusted_performance_score`, `caregiver_alert`, and `notes`.
+| Name | Default |
+| --- | --- |
+| `PYTHON_VERSION` | `3.12.11` |
+| `AURA_PUBLIC_DEMO` | `true` |
+| `AURA_CAREGIVER_MODEL` | `gpt-5-mini` |
+| `AURA_PATIENT_MODEL` | `gpt-5-mini` |
+| `AURA_OPENAI_TIMEOUT` | `30` |
+| `AURA_OPENAI_RETRIES` | `5` |
+| `AURA_TASK_GRACE_PERIOD_MINUTES` | `30` |
 
-## Scoring
+Optional settings:
 
-Raw score starts from:
+| Name | Purpose |
+| --- | --- |
+| `AURA_ALLOWED_ORIGINS` | Additional trusted origins. Leave unset for same-origin deployment. |
+| `AURA_MODEL` | Legacy caregiver-model fallback. |
+| `AURA_CAREGIVER_MODEL_FALLBACKS` | Comma-separated caregiver model fallbacks. |
+| `AURA_PATIENT_MODEL_FALLBACKS` | Comma-separated patient model fallbacks. |
+| `TWILIO_ACCOUNT_SID` | Twilio account identifier. |
+| `TWILIO_AUTH_TOKEN` | Twilio secret credential. |
+| `TWILIO_FROM_PHONE` | Twilio sender phone number. |
 
-- `100` if marked complete.
-- `35` if not complete.
+Set all three Twilio variables or none. Render supplies `PORT`; do not hardcode it.
+Never commit `.env` or enter secret values into `render.yaml`.
 
-Penalties:
+## Data Storage
 
-- `-8` per reminder, up to 5 reminders.
-- `-18` if help was requested.
-- `-15` for a possible confusion flag.
-- Time penalty if completion takes longer than expected.
+AURA stores accounts, salted password hashes, authentication tokens, routines,
+task attempts, alerts, summaries, chats, and caregiver notes in SQLite. Each
+account's records are separated by its username-based `user_id`.
 
-Adjusted score modifies raw score by task difficulty:
+Locally, the default database is `aura.sqlite3` in the project directory. On
+Render, `AURA_DATA_DIR=/var/data` places it on the attached persistent disk.
+Only files under that mount path survive deploys and restarts.
 
-- Easy tasks are adjusted downward.
-- Hard tasks are adjusted upward.
+Do not commit or upload the local SQLite database. A public demonstration should
+start with an empty database and synthetic accounts. Use the caregiver CSV export
+for deliberate, non-sensitive backups. A persistent disk disables normal
+zero-downtime deploys and cannot be shared by horizontally scaled instances.
 
-Caregiver analytics use adjusted performance so easy and hard tasks are not treated the same.
+## Deploy To Render
 
-## Insights
+The repository includes one Render Blueprint, `render.yaml`. It declares a paid
+Starter web service, a 1 GB persistent disk, one application instance, a health
+check, production commands, and non-secret environment settings.
 
-The caregiver dashboard computes:
+1. Push the reviewed repository to GitHub without `.env`, `.env.admin`, databases,
+   exports, logs, credentials, caches, or patient data.
+2. Sign in to the Render Dashboard with GitHub.
+3. Select **New**, then **Blueprint**.
+4. Connect the GitHub repository containing this file.
+5. Review the declared Starter service and persistent disk cost.
+6. Enter `OPENAI_API_KEY`, `AURA_ADMIN_USERNAME`, and `AURA_ADMIN_PASSWORD` when
+   Render prompts for the `sync: false` variables. Do not paste them into source.
+7. Apply the Blueprint and watch the deployment logs.
+8. Open the generated `https://<service-name>.onrender.com` address.
+9. Confirm `/health` returns an `ok` status and the database is available.
 
-- Today's activity.
-- Completed and missed tasks.
-- Help requests.
-- Possible confusion flags.
-- Caregiver alerts.
-- Raw and adjusted performance.
-- Best and worst time of day.
-- Best and worst day of week.
-- Hardest category.
-- Hardest task.
-- Recent trend.
-- Suggested caregiver follow-up.
+To enable Twilio later, open the service's **Environment** page, add all three
+Twilio variables, and select **Save and deploy**.
 
-The caregiver page uses internal tabs for schedule, performance insights, AURA update, recent activity, and dataset.
-The caregiver `Reset` button clears caregiver chat messages and safety alerts only. It does not delete routines or task performance history.
+## Verify A Deployment
 
-The caregiver `Dataset` tab requires the caregiver password again. It shows records directly from SQLite, including date, scheduled time, task, status, reminders, help requests, possible confusion flags, raw score, adjusted score, and notes.
+Use synthetic data and verify:
 
-The `Clear Dataset` button permanently deletes the logged-in patient's task history, alerts, caregiver notes, summaries, and caregiver chat after a warning and caregiver password confirmation. It does not delete scheduled routines.
+1. The welcome, login, patient, and caregiver screens load over HTTPS.
+2. A demonstration account can be created and restored after refresh.
+3. Routines can be created and deleted.
+4. Patient Help creates an immediate caregiver alert and notification badge.
+5. Patient-caregiver chat and AURA chat work.
+6. Dataset records remain after a service restart or redeploy.
+7. CSV export downloads correctly.
+8. `/health` reports `{"status":"ok","database":"available"}`.
+9. Browser developer tools show no failed static assets or API requests.
 
-Caregiver chat answers only from stored records.
+## Future Deployments
 
-## Routines
+`autoDeployTrigger: commit` causes every commit pushed to the linked branch to
+trigger a Render build and deployment. A failed build leaves the previous working
+deployment in place. Review database compatibility before deploying schema changes.
 
-Caregivers can create routines in the caregiver tab.
-Each routine has a `Delete` button that permanently removes that scheduled task for the logged-in user.
+## Security
 
-Each routine stores:
+The root `.gitignore` excludes environment files, virtual environments, UV caches,
+SQLite databases and sidecars, exports, uploads, logs, private keys, credentials,
+and common editor files. `.env.example` is intentionally retained and contains
+placeholders only.
 
-- `task_id`
-- `task_name`
-- `task_category`
-- `task_difficulty`
-- `task_importance`
-- `scheduled_time`
-- `time_of_day`
-- `repeat_schedule`
-- step-by-step instructions
-- active status
+Before every push, inspect:
 
-The patient only sees one step at a time.
-
-## Alerts
-
-Alerts are generated for:
-
-- Important missed tasks.
-- Multiple reminders.
-- Help requests.
-- Possible confusion flags.
-- Emergency phrases.
-
-Emergency phrasing tells the patient to contact the caregiver or emergency services.
-
-## Text Alerts
-
-Safety alerts appear in the caregiver interface automatically. Caregivers can add
-an optional phone number while creating an account or logging in. The number is
-stored for that account and can be enabled or disabled from `Reminders`.
-
-To send real SMS texts, add the Twilio service credentials to `.env`:
-
-```text
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_FROM_PHONE=+15555555555
+```powershell
+git status --short
+git diff --check
+git check-ignore -v .env .env.admin aura.sqlite3 .venv .uv-cache
 ```
 
-The caregiver phone is entered in AURA, not `.env`. When Twilio is unavailable or
-text messages are disabled, AURA still records emergency and missed-task alerts
-in SQLite and shows them in the caregiver interface.
-
-## Export
-
-The caregiver tab has an `Export CSV` link. It exports:
-
-```text
-aura_task_attempts.csv
-```
-
-## Notes
-
-Keep `OPENAI_API_KEY` in `.env`. Do not put it in browser files.
-Never put real API keys, Twilio credentials, admin credentials, patient exports,
-or SQLite database files in `.env.example` or any committed source file.
-
-The default OpenAI model is `gpt-5.5-pro`. To use a different model while testing, add this to `.env`:
-
-```text
-AURA_MODEL=gpt-5.5-pro
-```
+Do not upload real patient records or claim that this prototype is medically or
+legally compliant.
