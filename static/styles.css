@@ -3266,7 +3266,60 @@ textarea {
 }
 
 .admin-table-wrap {
+  width: 100%;
+  min-width: 0;
+  min-height: 240px;
+  max-height: 100%;
   overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.admin-dataset-card > .section-title-row {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.admin-dataset-card > .dataset-grid {
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+.admin-table-wrap .dataset-table {
+  width: 100%;
+  min-width: 1180px;
+  table-layout: auto;
+}
+
+.admin-table-wrap .dataset-table th,
+.admin-table-wrap .dataset-table td {
+  min-width: 92px;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.admin-table-wrap .dataset-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.admin-table-wrap .dataset-table th:nth-child(3),
+.admin-table-wrap .dataset-table td:nth-child(3) {
+  min-width: 180px;
+}
+
+.admin-table-wrap .dataset-table th:nth-child(7),
+.admin-table-wrap .dataset-table td:nth-child(7) {
+  min-width: 150px;
+}
+
+.admin-table-wrap .dataset-table th:last-child,
+.admin-table-wrap .dataset-table td:last-child {
+  min-width: 280px;
+  max-width: 380px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .admin-dummy-interface {
