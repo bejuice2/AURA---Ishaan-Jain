@@ -5,6 +5,7 @@ from collections import defaultdict, deque
 from threading import Lock
 from time import monotonic
 from types import MethodType
+from urllib.parse import urlsplit
 
 from flask import Flask, Response, jsonify, request
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -59,6 +60,11 @@ def rate_limit_exceeded() -> bool:
 def origin_is_allowed() -> bool:
     origin = request.headers.get("Origin", "").rstrip("/")
     if not origin:
+        return True
+    parsed_origin = urlsplit(origin)
+    if parsed_origin.scheme not in {"http", "https"} or not parsed_origin.netloc:
+        return False
+    if parsed_origin.netloc.casefold() == request.host.casefold():
         return True
     same_origin = request.host_url.rstrip("/")
     return origin == same_origin or origin in runtime_config.ALLOWED_ORIGINS

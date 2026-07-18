@@ -35,11 +35,24 @@ PUBLIC_DEMO = env_flag("AURA_PUBLIC_DEMO", False)
 SECURE_COOKIES = IS_PRODUCTION
 DATA_DIR = Path(os.getenv("AURA_DATA_DIR", str(BASE_DIR))).expanduser().resolve()
 TIMEZONE_NAME = os.getenv("AURA_TIMEZONE", "").strip()
-ALLOWED_ORIGINS = {
-    origin.strip().rstrip("/")
-    for origin in os.getenv("AURA_ALLOWED_ORIGINS", "").split(",")
-    if origin.strip()
-}
+
+
+def configured_allowed_origins() -> set[str]:
+    origins = {
+        origin.strip().rstrip("/")
+        for origin in os.getenv("AURA_ALLOWED_ORIGINS", "").split(",")
+        if origin.strip()
+    }
+    render_url = os.getenv("RENDER_EXTERNAL_URL", "").strip().rstrip("/")
+    render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME", "").strip().rstrip("/")
+    if render_url:
+        origins.add(render_url)
+    if render_hostname:
+        origins.add(f"https://{render_hostname}")
+    return origins
+
+
+ALLOWED_ORIGINS = configured_allowed_origins()
 
 try:
     CONFIGURED_TIMEZONE = ZoneInfo(TIMEZONE_NAME) if TIMEZONE_NAME else None
