@@ -73,7 +73,7 @@ Required in production:
 | `AURA_ADMIN_PASSWORD` | Strong private AURA administrator password. |
 | `AURA_ENV` | Set to `production` on Render. |
 | `AURA_DATA_DIR` | Set to the persistent disk path, `/var/data`. |
-| `AURA_TIMEZONE` | IANA timezone, such as `America/New_York`. |
+| `AURA_TIMEZONE` | IANA timezone, such as `America/Chicago`. |
 
 Production settings included by `render.yaml`:
 

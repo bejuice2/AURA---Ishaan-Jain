@@ -17,7 +17,7 @@ services:
       - key: AURA_DATA_DIR
         value: /var/data
       - key: AURA_TIMEZONE
-        value: America/New_York
+        value: America/Chicago
       - key: AURA_PUBLIC_DEMO
         value: "true"
       - key: AURA_CAREGIVER_MODEL
