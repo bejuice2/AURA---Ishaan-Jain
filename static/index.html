@@ -538,8 +538,25 @@
           </section>
         </div>
 
-        <div class="caregiver-section-panel" id="caregiverSection-performance" hidden>
-          <section class="stats-grid" aria-label="Session stats">
+        <div
+          class="caregiver-section-panel admin-dummy-interface caregiver-performance-interface"
+          id="caregiverSection-performance"
+          hidden
+        >
+          <div class="admin-dummy-hero caregiver-performance-hero">
+            <div>
+              <p class="eyebrow">Patient Dataset</p>
+              <h2>Performance Insights</h2>
+              <p class="section-subtext" id="caregiverInsightSource">
+                Waiting for stored patient records.
+              </p>
+            </div>
+          </div>
+
+          <section
+            class="dataset-grid admin-dummy-summary caregiver-session-summary"
+            aria-label="Session stats"
+          >
             <div class="stat-card">
               <span id="interactionsStat">0</span>
               <p>Interactions</p>
@@ -566,55 +583,48 @@
             </div>
           </section>
 
-          <section class="insight-panel caregiver-detailed-insights" aria-label="Performance insights">
-            <div class="section-title-row">
-              <div>
-                <h3>Performance Insights</h3>
-                <p class="section-subtext" id="caregiverInsightSource">
-                  Waiting for stored patient records.
-                </p>
-              </div>
-            </div>
+          <section class="admin-insight-section caregiver-performance-overview">
+            <h3>Stored Performance Overview</h3>
             <div class="dataset-grid caregiver-insight-summary" id="insightGrid"></div>
-
-            <div class="caregiver-insight-columns">
-              <section class="caregiver-insight-section">
-                <h4>Time of Day</h4>
-                <div class="admin-insight-list" id="caregiverTimeInsightList"></div>
-              </section>
-              <section class="caregiver-insight-section">
-                <h4>Task Difficulty</h4>
-                <div class="admin-insight-list" id="caregiverDifficultyInsightList"></div>
-              </section>
-              <section class="caregiver-insight-section">
-                <h4>Day of Week</h4>
-                <div class="admin-insight-list" id="caregiverDayInsightList"></div>
-              </section>
-              <section class="caregiver-insight-section">
-                <h4>Tasks Needing Review</h4>
-                <div class="admin-insight-list" id="caregiverTaskInsightList"></div>
-              </section>
-              <section class="caregiver-insight-section caregiver-trend-section">
-                <h4>Recent Trend</h4>
-                <div class="admin-insight-list" id="caregiverTrendInsightList"></div>
-              </section>
-            </div>
-
-            <div class="caregiver-insight-notes">
-              <section class="caregiver-insight-section">
-                <h4>Key Findings</h4>
-                <ul class="admin-insight-bullets" id="caregiverKeyFindings"></ul>
-              </section>
-              <section class="caregiver-insight-section">
-                <h4>Recommended Actions</h4>
-                <ul class="admin-insight-bullets" id="caregiverRecommendedActions"></ul>
-              </section>
-              <section class="caregiver-insight-section">
-                <h4>How to Read This</h4>
-                <ul class="admin-insight-bullets" id="caregiverDataNotes"></ul>
-              </section>
-            </div>
           </section>
+
+          <div class="admin-dummy-grid caregiver-insight-columns">
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>Time of Day</h3>
+              <div class="admin-insight-list" id="caregiverTimeInsightList"></div>
+            </section>
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>Task Difficulty</h3>
+              <div class="admin-insight-list" id="caregiverDifficultyInsightList"></div>
+            </section>
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>Day of Week</h3>
+              <div class="admin-insight-list" id="caregiverDayInsightList"></div>
+            </section>
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>Tasks Needing Review</h3>
+              <div class="admin-insight-list" id="caregiverTaskInsightList"></div>
+            </section>
+            <section class="admin-insight-section caregiver-insight-section caregiver-trend-section">
+              <h3>Recent Trend</h3>
+              <div class="admin-insight-list" id="caregiverTrendInsightList"></div>
+            </section>
+          </div>
+
+          <div class="admin-dummy-notes caregiver-insight-notes">
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>Key Findings</h3>
+              <ul class="admin-insight-bullets" id="caregiverKeyFindings"></ul>
+            </section>
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>Recommended Actions</h3>
+              <ul class="admin-insight-bullets" id="caregiverRecommendedActions"></ul>
+            </section>
+            <section class="admin-insight-section caregiver-insight-section">
+              <h3>How to Read This</h3>
+              <ul class="admin-insight-bullets" id="caregiverDataNotes"></ul>
+            </section>
+          </div>
         </div>
 
         <div class="caregiver-section-panel" id="caregiverSection-update" hidden>
