@@ -1604,13 +1604,22 @@ function renderInsightList(container, items = [], fields = []) {
     const title = document.createElement("strong");
     title.textContent = item.label;
     card.append(title);
+    const metrics = document.createElement("div");
+    metrics.className = "insight-metrics";
     fields.forEach(([key, label]) => {
-      const line = document.createElement("p");
-      line.textContent = `${label}: ${item[key] ?? "No data"}`;
-      card.append(line);
+      const row = document.createElement("div");
+      row.className = "insight-metric";
+      const metricLabel = document.createElement("span");
+      metricLabel.textContent = label;
+      const metricValue = document.createElement("b");
+      metricValue.textContent = item[key] ?? "No data";
+      row.append(metricLabel, metricValue);
+      metrics.append(row);
     });
+    card.append(metrics);
     if (item.interpretation) {
       const note = document.createElement("span");
+      note.className = "insight-interpretation";
       note.textContent = item.interpretation;
       card.append(note);
     }
