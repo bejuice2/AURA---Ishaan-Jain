@@ -157,7 +157,10 @@ def dispatch_existing_handler() -> Response:
     response = Response(body, status=int(response_state["status"]))
     for name, value in response_state["headers"]:
         if name.lower() not in {"content-length", "connection", "server", "date"}:
-            response.headers.add(name, value)
+            if name.lower() == "set-cookie":
+                response.headers.add(name, value)
+            else:
+                response.headers[name] = value
     return response
 
 

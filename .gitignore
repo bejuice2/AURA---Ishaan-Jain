@@ -97,3 +97,5 @@ logs/
 Thumbs.db
 Desktop.ini
 
+# Local-only personal portfolio
+portfolio/
