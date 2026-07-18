@@ -202,6 +202,7 @@ let caregiverUnlocked = false;
 let isListening = false;
 let shouldKeepListening = false;
 let spokenRepliesEnabled = "speechSynthesis" in window;
+let availableSpeechVoices = [];
 let recognition = null;
 let finalTranscript = "";
 let restartTimer = null;
@@ -391,6 +392,71 @@ function browserLanguageCode() {
     return currentLanguageCode();
   }
   return navigator.language || "en-US";
+}
+
+function refreshSpeechVoices() {
+  if (!("speechSynthesis" in window)) {
+    availableSpeechVoices = [];
+    return;
+  }
+  availableSpeechVoices = window.speechSynthesis.getVoices();
+}
+
+function normalizedSpeechLanguage(language) {
+  return String(language || "").trim().toLowerCase().replaceAll("_", "-");
+}
+
+function naturalVoiceScore(voice, requestedLanguage) {
+  const voiceLanguage = normalizedSpeechLanguage(voice.lang);
+  const targetLanguage = normalizedSpeechLanguage(requestedLanguage);
+  const voiceBase = voiceLanguage.split("-")[0];
+  const targetBase = targetLanguage.split("-")[0];
+  if (!voiceBase || voiceBase !== targetBase) {
+    return -1000;
+  }
+
+  const name = voice.name || "";
+  let score = voiceLanguage === targetLanguage ? 120 : 80;
+  if (/natural|neural|enhanced|premium/i.test(name)) {
+    score += 110;
+  }
+  if (/google/i.test(name)) {
+    score += 65;
+  }
+  if (/microsoft/i.test(name)) {
+    score += 30;
+  }
+  if (/aria|jenny|sonia|natasha|guy|ryan|libby|michelle|roger|ava|samantha/i.test(name)) {
+    score += 35;
+  }
+  if (voice.localService === false) {
+    score += 20;
+  }
+  if (voice.default) {
+    score += 10;
+  }
+  if (/espeak|festival|compact|desktop/i.test(name)) {
+    score -= 90;
+  }
+  return score;
+}
+
+function bestNaturalVoice(language) {
+  if (!availableSpeechVoices.length) {
+    refreshSpeechVoices();
+  }
+  return availableSpeechVoices
+    .map((voice) => ({ voice, score: naturalVoiceScore(voice, language) }))
+    .filter((candidate) => candidate.score > -1000)
+    .sort((left, right) => right.score - left.score)[0]?.voice || null;
+}
+
+function setupSpeechVoices() {
+  if (!("speechSynthesis" in window)) {
+    return;
+  }
+  refreshSpeechVoices();
+  window.speechSynthesis.addEventListener?.("voiceschanged", refreshSpeechVoices);
 }
 
 async function loadLanguages() {
@@ -652,9 +718,24 @@ function speak(text) {
     return;
   }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = browserLanguageCode();
-  utterance.rate = 0.92;
+  const spokenText = String(text || "")
+    .replace(/https?:\/\/\S+/gi, "a link")
+    .replace(/[\*_#`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!spokenText) {
+    return;
+  }
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+  const requestedLanguage = browserLanguageCode();
+  const voice = bestNaturalVoice(requestedLanguage);
+  utterance.lang = voice?.lang || requestedLanguage;
+  if (voice) {
+    utterance.voice = voice;
+  }
+  utterance.rate = 0.96;
+  utterance.pitch = 1;
+  utterance.volume = 1;
   window.speechSynthesis.speak(utterance);
 }
 
@@ -2617,6 +2698,7 @@ passwordForm.addEventListener("submit", async (event) => {
 
 cancelPasswordButton.addEventListener("click", hidePasswordModal);
 
+setupSpeechVoices();
 setupSpeechRecognition();
 updateVoiceButtons();
 setAuthRole(selectedRole);
