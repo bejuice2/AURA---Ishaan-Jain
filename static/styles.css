@@ -4666,6 +4666,46 @@ textarea:disabled {
   background: #ffffff;
 }
 
+.password-field {
+  position: relative;
+  min-width: 0;
+}
+
+.auth-form .password-field > input,
+.password-dialog .password-field > input {
+  width: 100%;
+  padding-right: 76px;
+}
+
+.password-visibility-toggle {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  min-width: 58px;
+  min-height: 34px;
+  padding: 0 10px;
+  transform: translateY(-50%);
+  border: 1px solid #cbd7d9;
+  border-radius: 6px;
+  background: #f4f7f7;
+  color: var(--brand-dark);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.password-visibility-toggle:hover {
+  transform: translateY(-50%);
+  border-color: var(--brand);
+  background: #eaf3f3;
+}
+
+.password-visibility-toggle:focus-visible {
+  outline: 3px solid rgba(47, 111, 115, 0.22);
+  outline-offset: 1px;
+}
+
 .patient-panel,
 .caregiver-panel {
   border-color: var(--line);

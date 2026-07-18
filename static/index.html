@@ -77,9 +77,27 @@
             <label for="loginUsername">Username</label>
             <input id="loginUsername" autocomplete="username" required>
             <label for="loginPassword">Password</label>
-            <input id="loginPassword" type="password" autocomplete="current-password" required>
+            <div class="password-field">
+              <input id="loginPassword" type="password" autocomplete="current-password" required>
+              <button
+                class="password-visibility-toggle"
+                type="button"
+                data-password-toggle="loginPassword"
+                aria-controls="loginPassword"
+                aria-pressed="false"
+              >Show</button>
+            </div>
             <label for="loginCaregiverPassword">Caregiver password</label>
-            <input id="loginCaregiverPassword" type="password" autocomplete="current-password" required>
+            <div class="password-field">
+              <input id="loginCaregiverPassword" type="password" autocomplete="current-password" required>
+              <button
+                class="password-visibility-toggle"
+                type="button"
+                data-password-toggle="loginCaregiverPassword"
+                aria-controls="loginCaregiverPassword"
+                aria-pressed="false"
+              >Show</button>
+            </div>
             <label class="demo-phone-field" for="loginCaregiverPhone">Caregiver phone (optional)</label>
             <input
               class="demo-phone-field"
@@ -100,9 +118,27 @@
             <label for="signupUsername">Username</label>
             <input id="signupUsername" autocomplete="username" required>
             <label for="signupPassword">Password</label>
-            <input id="signupPassword" type="password" autocomplete="new-password" required>
+            <div class="password-field">
+              <input id="signupPassword" type="password" autocomplete="new-password" required>
+              <button
+                class="password-visibility-toggle"
+                type="button"
+                data-password-toggle="signupPassword"
+                aria-controls="signupPassword"
+                aria-pressed="false"
+              >Show</button>
+            </div>
             <label for="signupCaregiverPassword">Caregiver password</label>
-            <input id="signupCaregiverPassword" type="password" autocomplete="new-password" required>
+            <div class="password-field">
+              <input id="signupCaregiverPassword" type="password" autocomplete="new-password" required>
+              <button
+                class="password-visibility-toggle"
+                type="button"
+                data-password-toggle="signupCaregiverPassword"
+                aria-controls="signupCaregiverPassword"
+                aria-pressed="false"
+              >Show</button>
+            </div>
             <label class="demo-phone-field" for="signupCaregiverPhone">Caregiver phone (optional)</label>
             <input
               class="demo-phone-field"
@@ -119,7 +155,16 @@
             <label for="adminUsername">Admin username</label>
             <input id="adminUsername" autocomplete="username" required>
             <label for="adminPassword">Admin password</label>
-            <input id="adminPassword" type="password" autocomplete="current-password" required>
+            <div class="password-field">
+              <input id="adminPassword" type="password" autocomplete="current-password" required>
+              <button
+                class="password-visibility-toggle"
+                type="button"
+                data-password-toggle="adminPassword"
+                aria-controls="adminPassword"
+                aria-pressed="false"
+              >Show</button>
+            </div>
             <button class="primary-button" type="submit">Open Admin</button>
           </form>
 
@@ -880,13 +925,22 @@
         <form class="password-dialog" id="passwordForm">
           <h2 id="passwordTitle">Caregiver Access</h2>
           <label for="passwordInput">Password</label>
-          <input
-            id="passwordInput"
-            type="password"
-            inputmode="numeric"
-            autocomplete="current-password"
-            placeholder="Enter password"
-          >
+          <div class="password-field">
+            <input
+              id="passwordInput"
+              type="password"
+              inputmode="numeric"
+              autocomplete="current-password"
+              placeholder="Enter password"
+            >
+            <button
+              class="password-visibility-toggle"
+              type="button"
+              data-password-toggle="passwordInput"
+              aria-controls="passwordInput"
+              aria-pressed="false"
+            >Show</button>
+          </div>
           <p class="password-error" id="passwordError" hidden></p>
           <div class="password-actions">
             <button class="ghost-button" id="cancelPasswordButton" type="button">
@@ -903,12 +957,21 @@
           <label for="adminModalUsername">Username</label>
           <input id="adminModalUsername" autocomplete="username" required>
           <label for="adminModalPassword">Password</label>
-          <input
-            id="adminModalPassword"
-            type="password"
-            autocomplete="current-password"
-            required
-          >
+          <div class="password-field">
+            <input
+              id="adminModalPassword"
+              type="password"
+              autocomplete="current-password"
+              required
+            >
+            <button
+              class="password-visibility-toggle"
+              type="button"
+              data-password-toggle="adminModalPassword"
+              aria-controls="adminModalPassword"
+              aria-pressed="false"
+            >Show</button>
+          </div>
           <p class="password-error" id="adminModalError" hidden></p>
           <div class="password-actions">
             <button class="ghost-button" id="cancelAdminModalButton" type="button">

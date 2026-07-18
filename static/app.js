@@ -81,6 +81,7 @@ const signupCaregiverPassword = document.querySelector("#signupCaregiverPassword
 const signupCaregiverPhone = document.querySelector("#signupCaregiverPhone");
 const adminUsername = document.querySelector("#adminUsername");
 const adminPassword = document.querySelector("#adminPassword");
+const passwordVisibilityButtons = document.querySelectorAll("[data-password-toggle]");
 const authStatus = document.querySelector("#authStatus");
 const authPreferences = document.querySelector("#authPreferences");
 const authRoleInputs = document.querySelectorAll('input[name="authRole"]');
@@ -230,9 +231,38 @@ let selectedRole = window.localStorage.getItem("auraRole") === "caregiver"
   : "patient";
 let remindersEnabled = window.localStorage.getItem("auraRemindersEnabled") === "true";
 
+function setPasswordVisibility(button, visible) {
+  const input = document.getElementById(button.dataset.passwordToggle || "");
+  if (!input) {
+    return;
+  }
+  input.type = visible ? "text" : "password";
+  button.textContent = visible ? "Hide" : "Show";
+  button.setAttribute("aria-pressed", String(visible));
+  button.setAttribute("aria-label", visible ? "Hide password" : "Show password");
+  button.title = visible ? "Hide password" : "Show password";
+}
+
+function resetPasswordVisibility(container = document) {
+  container.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    setPasswordVisibility(button, false);
+  });
+}
+
+function setupPasswordVisibility() {
+  passwordVisibilityButtons.forEach((button) => {
+    setPasswordVisibility(button, false);
+    button.addEventListener("click", () => {
+      const isVisible = button.getAttribute("aria-pressed") === "true";
+      setPasswordVisibility(button, !isVisible);
+    });
+  });
+}
+
 function showAuthMode(mode) {
   const isSignup = mode === "signup";
   const isAdmin = mode === "admin";
+  resetPasswordVisibility(authView);
   signupForm.hidden = !isSignup;
   loginForm.hidden = isSignup || isAdmin;
   adminLoginForm.hidden = !isAdmin;
@@ -543,6 +573,7 @@ async function submitAuth(endpoint, payload) {
 
 function showPasswordModal(action = "unlock") {
   passwordAction = action;
+  resetPasswordVisibility(passwordForm);
   passwordError.hidden = true;
   passwordError.textContent = "";
   passwordInput.value = "";
@@ -558,6 +589,7 @@ function showPasswordModal(action = "unlock") {
 }
 
 function hidePasswordModal() {
+  resetPasswordVisibility(passwordForm);
   passwordModal.hidden = true;
   passwordInput.value = "";
 }
@@ -1818,6 +1850,7 @@ function showAdminView(data) {
 }
 
 function hideAdminModal() {
+  resetPasswordVisibility(adminModalForm);
   adminLoginModal.hidden = true;
   adminModalUsername.value = "";
   adminModalPassword.value = "";
@@ -2582,6 +2615,7 @@ openAdminButton.addEventListener("click", () => {
   adminModalError.textContent = "";
   adminModalUsername.value = "";
   adminModalPassword.value = "";
+  resetPasswordVisibility(adminModalForm);
   adminLoginModal.hidden = false;
   adminModalUsername.focus();
 });
@@ -2698,6 +2732,7 @@ passwordForm.addEventListener("submit", async (event) => {
 
 cancelPasswordButton.addEventListener("click", hidePasswordModal);
 
+setupPasswordVisibility();
 setupSpeechVoices();
 setupSpeechRecognition();
 updateVoiceButtons();
